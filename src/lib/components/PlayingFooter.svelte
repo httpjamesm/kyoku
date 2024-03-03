@@ -14,8 +14,41 @@
 	import { playbackProgressStore } from '$lib/stores/playing';
 	import NowPlayingExpanded from './NowPlayingExpanded.svelte';
 	import TrackProgressBar from './TrackProgressBar.svelte';
+	import MdFavorite from 'svelte-icons/md/MdFavorite.svelte';
+	import MdFavoriteBorder from 'svelte-icons/md/MdFavoriteBorder.svelte';
+	import { queueStore } from '$lib/stores/queue';
+	import { getById } from '$lib/api/getMusic';
+	import { markFavourite, unmarkFavourite } from '$lib/api/favourite';
+	import toast from 'svelte-french-toast';
 
 	let showExpanded = false;
+
+	let favourite = false;
+
+	let currentTrackId = '';
+
+	const checkFavourite = async () => {
+		const item = await getById(currentTrackId);
+		favourite = item.UserData.IsFavorite;
+	};
+
+	$: if ($queueStore && $queueStore.items.length > $queueStore.currentIndex) {
+		currentTrackId = $queueStore.items[$queueStore.currentIndex].id;
+		checkFavourite();
+	}
+
+	const onToggleFavouriteHandler = async () => {
+		try {
+			if (favourite) {
+				await unmarkFavourite(currentTrackId);
+			} else {
+				await markFavourite(currentTrackId);
+			}
+			await checkFavourite();
+		} catch (e) {
+			toast.error((e as Error).message);
+		}
+	};
 
 	const { play, prev, pause, skip } = getContext<PlayerContextKey>(playerContextKey);
 </script>
@@ -63,6 +96,15 @@
 					{$playingStore?.track.artist} • {$playingStore?.track.album} • {$playingStore?.track.year}
 				</p>
 			</div>
+			<div class="buttons">
+				<button on:click={onToggleFavouriteHandler}>
+					{#if favourite}
+						<MdFavorite />
+					{:else}
+						<MdFavoriteBorder />
+					{/if}
+				</button>
+			</div>
 		{/if}
 	</div>
 	<div class="buttons">
@@ -105,6 +147,8 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
+				padding: 0.5rem;
+				box-sizing: border-box;
 
 				cursor: pointer;
 
@@ -144,6 +188,13 @@
 
 				.metadata {
 					color: #7c7c7c;
+				}
+			}
+
+			.buttons {
+				button {
+					height: 2.5rem;
+					width: 2.5rem;
 				}
 			}
 		}

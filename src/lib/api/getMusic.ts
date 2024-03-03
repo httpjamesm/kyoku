@@ -2,6 +2,17 @@ import { getClient, ResponseType } from '@tauri-apps/api/http';
 import { getHeaders } from './header';
 import { getUrl } from './url';
 
+export const getById = async (id: string) => {
+	const client = await getClient();
+
+	const res = await client.get(`${getUrl(true)}/Items/${id}`, {
+		headers: await getHeaders(),
+		responseType: ResponseType.JSON
+	});
+
+	return res.data as any;
+};
+
 export const getRecentlyPlayed = async () => {
 	const client = await getClient();
 
