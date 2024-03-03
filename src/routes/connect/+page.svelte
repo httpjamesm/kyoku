@@ -3,6 +3,8 @@
 	import { onMount } from 'svelte';
 	import getApiKey from '$lib/api/getApiKey';
 	import toast from 'svelte-french-toast';
+	import { goto } from '$app/navigation';
+	import { getLibraries } from '$lib/api/libraries';
 
 	let version = '0.0.0';
 
@@ -16,7 +18,7 @@
 		tryGetVersion();
 	});
 
-	let serverUrl = '';
+	let serverUrl = 'http://';
 	let username = '';
 	let password = '';
 
@@ -31,7 +33,26 @@
 				throw new Error("Server didn't return an access token");
 			}
 
+			const id = res.User.Id;
+
+			if (!id) {
+				throw new Error("Server didn't return a user ID");
+			}
+
 			window.localStorage.setItem('accessToken', token);
+			window.localStorage.setItem('userId', id);
+
+			const libraries = await getLibraries();
+
+			const musicLibrary = libraries.find((library: any) => library.Name.toLowerCase() === 'music');
+
+			if (!musicLibrary) {
+				throw new Error("Couldn't identify the music library");
+			}
+
+			window.localStorage.setItem('libraryId', musicLibrary.Id);
+
+			goto('/app/home');
 		} catch (e) {
 			toast.error((e as Error).message);
 		}

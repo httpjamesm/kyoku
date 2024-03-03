@@ -1,15 +1,21 @@
 import { getVersion } from '@tauri-apps/api/app';
 
-export const getHeaders = async (token: string = '') => {
+export const getHeaders = async () => {
+	let token = window.localStorage.getItem('accessToken');
+
 	let version = '0.0.0';
 
 	try {
 		version = await getVersion();
 	} catch { }
 
-	return {
-		'X-Emby-Authorization': `MediaBrowser Client="kyoku", Device="Computer", DeviceId="${generateRandomId(16)}", Version="${version}"${token.length > 0 ? `, Token=${token}` : ''}`
+	let headers = {
+		'X-Emby-Authorization': `MediaBrowser Client="kyoku", Device="Computer", DeviceId="${generateRandomId(16)}", Version="${version}"${token ? `, Token="${token}"` : ''}`
 	};
+
+	console.log(headers);
+
+	return headers;
 };
 
 const generateRandomId = (length: number): string => {
