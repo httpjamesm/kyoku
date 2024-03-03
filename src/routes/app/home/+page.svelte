@@ -37,8 +37,9 @@
 <style lang="scss">
 	.row {
 		display: flex;
+		flex-wrap: wrap;
 		gap: 1rem;
-		overflow-x: auto;
+		overflow: none;
 		height: fit-content;
 		width: 100%;
 	}

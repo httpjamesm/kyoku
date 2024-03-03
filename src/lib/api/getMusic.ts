@@ -12,7 +12,7 @@ export const getRecentlyPlayed = async () => {
 			SortBy: 'DatePlayed',
 			SortOrder: 'Descending',
 			IncludeItemTypes: 'audio',
-			Limit: '8',
+			Limit: '16',
 			Recursive: 'true',
 			Fields: 'PrimaryImageAspectRatio,AudioInfo',
 			Filters: 'IsPlayed',
@@ -21,6 +21,19 @@ export const getRecentlyPlayed = async () => {
 			EnableTotalRecordCount: 'false',
 			ParentId: window.localStorage.getItem('libraryId') as string
 		},
+		responseType: ResponseType.JSON
+	});
+
+	console.log(res.data);
+
+	return (res.data as any).Items;
+};
+
+export const getInstantMixFromSong = async (itemId: string) => {
+	const client = await getClient();
+
+	const res = await client.get(`${getUrl(false)}/Items/${itemId}/InstantMix`, {
+		headers: await getHeaders(),
 		responseType: ResponseType.JSON
 	});
 

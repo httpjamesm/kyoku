@@ -10,7 +10,7 @@
 	import { playingStore } from '$lib/stores/playing';
 	import { getUrl } from '$lib/api/url';
 
-	const { play, pause, isPlaying, setSrc } = getContext<PlayerContextKey>(playerContextKey);
+	const { play, prev, pause, isPlaying, skip } = getContext<PlayerContextKey>(playerContextKey);
 
 	let playing = false;
 
@@ -30,7 +30,7 @@
 
 <footer class="footer">
 	<div class="buttons">
-		<button>
+		<button on:click={prev}>
 			<MdSkipPrevious />
 		</button>
 		<button
@@ -49,7 +49,7 @@
 				<MdPlayArrow />
 			{/if}
 		</button>
-		<button>
+		<button on:click={skip}>
 			<MdSkipNext />
 		</button>
 	</div>
@@ -76,7 +76,7 @@
 		position: absolute;
 		bottom: 0;
 		left: 0;
-		padding: 0.5rem 2rem;
+		padding: 0.5rem 1rem;
 		box-sizing: border-box;
 		display: flex;
 		justify-content: space-between;

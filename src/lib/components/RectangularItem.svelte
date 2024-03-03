@@ -4,6 +4,8 @@
 	import type { PlayerContextKey } from '$lib/context/player';
 	import { getContext } from 'svelte';
 	import { playingStore } from '$lib/stores/playing';
+	import { queueStore } from '$lib/stores/queue';
+	import { getInstantMixFromSong } from '$lib/api/getMusic';
 
 	const { play, pause, setSrc } = getContext<PlayerContextKey>(playerContextKey);
 
@@ -15,18 +17,22 @@
 	export let year: number;
 
 	const startTrack = async () => {
-		const audioUrl = `${getUrl(false)}/Audio/${itemId}/universal?audioCodec=mp3&api_key=${window.localStorage.getItem('accessToken')}&Container=mp3,aac,m4a|aac,m4b|aac,flac,alac,m4a|alac,m4b|alac,wav&StartTimeTicks=0`;
+		const mix = await getInstantMixFromSong(itemId);
 
-		setSrc(audioUrl);
+		const newQueue = mix.map((item: any) => ({
+			albumId: item.AlbumId,
+			name: item.Name,
+			artist: item.AlbumArtist,
+			album: item.Album,
+			year: item.ProductionYear,
+			id: item.Id
+		}));
 
-		playingStore.set({
-			track: {
-				albumId,
-				name,
-				album,
-				artist,
-				year
-			}
+		console.log('instant mix queue', newQueue);
+
+		queueStore.set({
+			currentIndex: 0,
+			items: newQueue
 		});
 	};
 </script>

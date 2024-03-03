@@ -3,6 +3,8 @@ export interface PlayerContextKey {
 	pause: () => void;
 	setSrc: (url: string) => void;
 	isPlaying: () => boolean;
+	skip: () => void;
+	prev: () => void;
 }
 
 export const playerContextKey = {} as PlayerContextKey;

@@ -27,8 +27,16 @@
 		return audioPlayer.isPlaying();
 	}
 
+	function skip() {
+		audioPlayer.skip();
+	}
+
+	function prev() {
+		audioPlayer.prev();
+	}
+
 	// Set the context
-	setContext(playerContextKey, { play, pause, setSrc, isPlaying });
+	setContext(playerContextKey, { play, pause, setSrc, isPlaying, skip, prev });
 </script>
 
 <div class="blob-container">
