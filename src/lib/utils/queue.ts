@@ -1,6 +1,6 @@
 import { getAlbumTracks, getById, getInstantMixFromSong, getParentItems } from '$lib/api/getMusic';
 import { Item } from '$lib/enums/item';
-import type { QueueStore } from '$lib/stores/queue';
+import type { QueueItem, QueueStore } from '$lib/stores/queue';
 import { queueStore } from '$lib/stores/queue';
 
 export const getNewQueue = async (type: Item, id: string) => {
@@ -57,6 +57,17 @@ export const playNext = async (type: Item, id: string) => {
 		items: [
 			...store.items.slice(0, store.currentIndex + 1),
 			...relevantItems,
+			...store.items.slice(store.currentIndex + 1)
+		]
+	}));
+};
+
+export const addItemsNextInQueue = (items: QueueItem[]) => {
+	queueStore.update((store: QueueStore) => ({
+		...store,
+		items: [
+			...store.items.slice(0, store.currentIndex + 1),
+			...items,
 			...store.items.slice(store.currentIndex + 1)
 		]
 	}));

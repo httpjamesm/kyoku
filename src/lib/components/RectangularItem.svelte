@@ -10,6 +10,7 @@
 	import toast from 'svelte-french-toast';
 	import { getNewQueue, playNext } from '$lib/utils/queue';
 	import { Item } from '$lib/enums/item';
+	import { goto } from '$app/navigation';
 
 	export let itemId: string;
 	export let albumId: string;
@@ -45,6 +46,15 @@
 				{
 					label: 'Play next',
 					event: playNextHandler
+				},
+				{
+					is_separator: true
+				},
+				{
+					label: 'Go to album',
+					event: () => {
+						goto(`/app/album?id=${albumId}`);
+					}
 				},
 				{
 					is_separator: true
