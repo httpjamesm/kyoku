@@ -1,11 +1,7 @@
 <script lang="ts">
 	import { getUrl } from '$lib/api/url';
-	import { playerContextKey } from '$lib/context/player';
-	import type { PlayerContextKey } from '$lib/context/player';
-	import { getContext } from 'svelte';
 	import { isPlayingStore } from '$lib/stores/playing';
 	import { queueStore } from '$lib/stores/queue';
-	import { getInstantMixFromSong, getParentItems } from '$lib/api/getMusic';
 	import MdPlayArrow from 'svelte-icons/md/MdPlayArrow.svelte';
 	import MdPause from 'svelte-icons/md/MdPause.svelte';
 	import { fade } from 'svelte/transition';
@@ -13,9 +9,7 @@
 	import type { QueueStore } from '$lib/stores/queue';
 	import { markFavourite, unmarkFavourite } from '$lib/api/favourite';
 	import toast from 'svelte-french-toast';
-	import { getAlbumTracks } from '$lib/api/getMusic';
-
-	const { play, pause, setSrc } = getContext<PlayerContextKey>(playerContextKey);
+	import { getNewQueue, playNext } from '$lib/utils/queue';
 
 	export let itemId: string;
 	export let albumId: string;
@@ -28,66 +22,10 @@
 
 	let hovering = false;
 
-	const getNewQueue = async () => {
-		let items: any[] = [];
-
-		switch (type) {
-			case 'song':
-				items = await getInstantMixFromSong('Items', itemId);
-				break;
-			case 'album':
-				items = [
-					...(await getParentItems(itemId)),
-					...(await getInstantMixFromSong('Albums', itemId))
-				];
-				break;
-		}
-
-		const newQueue = items.map((item: any) => getQueueItemFromJellyfinItem(item));
-
-		return newQueue;
-	};
-
-	const getQueueItemFromJellyfinItem = (item: any) => {
-		return {
-			albumId: item.AlbumId,
-			name: item.Name,
-			artist: item.AlbumArtist,
-			album: item.Album,
-			year: item.ProductionYear,
-			id: item.Id
-		};
-	};
-
-	const getRelevantItems = async () => {
-		let items: any[] = [];
-
-		switch (type) {
-			case 'song':
-				items = [
-					{
-						albumId,
-						name,
-						artist,
-						album,
-						year,
-						id: itemId
-					}
-				];
-				break;
-			case 'album':
-				const jellyfinItems = await getAlbumTracks(itemId);
-				items = jellyfinItems.map((item: any) => getQueueItemFromJellyfinItem(item));
-				break;
-		}
-
-		return items;
-	};
-
 	const startTrack = async () => {
 		queueStore.set({
 			currentIndex: 0,
-			items: await getNewQueue()
+			items: await getNewQueue(type, itemId)
 		});
 	};
 
@@ -98,16 +36,7 @@
 	}
 
 	const playNextHandler = async () => {
-		const relevantItems = await getRelevantItems();
-
-		queueStore.update((store: QueueStore) => ({
-			...store,
-			items: [
-				...store.items.slice(0, store.currentIndex + 1),
-				...relevantItems,
-				...store.items.slice(store.currentIndex + 1)
-			]
-		}));
+		await playNext(type, itemId);
 	};
 
 	const onContextMenu = () => {

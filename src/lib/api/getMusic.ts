@@ -56,6 +56,22 @@ export const getLibrary = async (sort = 'DateCreated', order = 'Descending') => 
 	return (res.data as any).Items;
 };
 
+export const searchLibrary = async (term: string) => {
+	const client = await getClient();
+
+	const res = await client.get(`${getUrl(true)}/Items`, {
+		headers: await getHeaders(),
+		query: {
+			ParentId: window.localStorage.getItem('libraryId') as string,
+			SearchTerm: term,
+			Limit: '20',
+			Recursive: 'true'
+		}
+	});
+
+	return (res.data as any).Items;
+};
+
 export const getAlbumTracks = async (albumId: string) => {
 	const client = await getClient();
 
