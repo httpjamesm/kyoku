@@ -5,6 +5,7 @@
 	import toast from 'svelte-french-toast';
 	import { goto } from '$app/navigation';
 	import { getLibraries } from '$lib/api/libraries';
+	import TextInput from '$lib/components/input/TextInput.svelte';
 
 	let version = '0.0.0';
 
@@ -66,38 +67,32 @@
 			<h1>Connect to <span class="jellyfin">Jellyfin</span></h1>
 			<br />
 			<form on:submit|preventDefault={onFormSubmitHandler}>
-				<div class="form-control">
-					<label for="server-url-input">Server URL</label>
-					<input
-						id="server-url-input"
-						type="url"
-						placeholder="https://server.com..."
-						bind:value={serverUrl}
-						required
-					/>
-				</div>
+				<TextInput
+					label="Server URL"
+					id="server-url-input"
+					type="url"
+					placeholder="https://server.com..."
+					bind:value={serverUrl}
+					required
+				/>
 				<br />
-				<div class="form-control">
-					<label for="username-input">Username</label>
-					<input
-						id="username-input"
-						type="text"
-						placeholder="musician"
-						bind:value={username}
-						required
-					/>
-				</div>
+				<TextInput
+					label="Username"
+					id="username-input"
+					type="text"
+					placeholder="musician"
+					bind:value={username}
+					required
+				/>
 				<br />
-				<div class="form-control">
-					<label for="password-input">Password</label>
-					<input
-						id="password-input"
-						type="password"
-						placeholder="•••••••"
-						bind:value={password}
-						required
-					/>
-				</div>
+				<TextInput
+					label="Password"
+					id="password-input"
+					type="password"
+					placeholder="•••••••"
+					bind:value={password}
+					required
+				/>
 				<br />
 				<button type="submit">Connect</button>
 			</form>
@@ -169,28 +164,6 @@
 
 						&:hover {
 							filter: brightness(0.7);
-						}
-					}
-
-					.form-control {
-						display: flex;
-						flex-direction: column;
-						justify-content: flex-start;
-
-						label {
-							margin-bottom: 0.5rem;
-							text-align: left;
-						}
-
-						input {
-							background-color: #303030;
-							border: 1px solid #606060;
-							padding: 0.5rem 1rem;
-							border-radius: 10px;
-							font-size: 1rem;
-							width: 100%;
-							box-sizing: border-box;
-							color: white;
 						}
 					}
 				}
