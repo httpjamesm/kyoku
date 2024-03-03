@@ -14,15 +14,11 @@
 	} as QueueStore;
 
 	export function play() {
-		console.log(audioElement.currentTime);
 		audioElement.play();
-		isPlayingStore.set(true);
 	}
 
 	export function pause() {
 		audioElement.pause();
-		console.log(audioElement.currentTime);
-		isPlayingStore.set(false);
 	}
 
 	export function isPlaying() {
@@ -123,7 +119,16 @@
 	});
 </script>
 
-<audio style="display: none;" bind:this={audioElement}>
+<audio
+	style="display: none;"
+	bind:this={audioElement}
+	on:play={() => {
+		isPlayingStore.set(true);
+	}}
+	on:pause={() => {
+		isPlayingStore.set(false);
+	}}
+>
 	<source type="audio/mp3" />
 	Your browser does not support the audio element.
 </audio>
