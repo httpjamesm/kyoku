@@ -11,11 +11,13 @@
 	import { playingStore } from '$lib/stores/playing';
 	import { getUrl } from '$lib/api/url';
 	import { isPlayingStore } from '$lib/stores/playing';
+	import { playbackProgressStore } from '$lib/stores/playing';
 
 	const { play, prev, pause, skip } = getContext<PlayerContextKey>(playerContextKey);
 </script>
 
 <footer class="footer">
+	<hr class="progress-bar" style="width: {$playbackProgressStore}%" />
 	<div class="buttons">
 		<button on:click={prev}>
 			<MdSkipPrevious />
@@ -74,6 +76,16 @@
 		box-sizing: border-box;
 		display: flex;
 		justify-content: space-between;
+		z-index: 5;
+
+		.progress-bar {
+			position: absolute;
+			top: -10px;
+			left: 0;
+			border: 2px solid #c957ff;
+		}
+
+		box-shadow: 0 0 15px 8px black;
 
 		.buttons {
 			display: flex;

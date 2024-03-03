@@ -13,3 +13,5 @@ export interface PlayingStore {
 export const playingStore = writable<PlayingStore | null>(null);
 
 export const isPlayingStore = writable<boolean>(false);
+
+export const playbackProgressStore = writable<number>(0);

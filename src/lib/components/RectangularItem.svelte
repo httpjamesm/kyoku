@@ -9,6 +9,8 @@
 	import MdPlayArrow from 'svelte-icons/md/MdPlayArrow.svelte';
 	import MdPause from 'svelte-icons/md/MdPause.svelte';
 	import { fade } from 'svelte/transition';
+	import { showMenu } from 'tauri-plugin-context-menu';
+	import type { QueueStore } from '$lib/stores/queue';
 
 	const { play, pause, setSrc } = getContext<PlayerContextKey>(playerContextKey);
 
@@ -22,7 +24,7 @@
 
 	let hovering = false;
 
-	const startTrack = async () => {
+	const getNewQueue = async () => {
 		let items: any[] = [];
 
 		switch (type) {
@@ -37,8 +39,6 @@
 				break;
 		}
 
-		console.log(items);
-
 		const newQueue = items.map((item: any) => ({
 			albumId: item.AlbumId,
 			name: item.Name,
@@ -48,9 +48,13 @@
 			id: item.Id
 		}));
 
+		return newQueue;
+	};
+
+	const startTrack = async () => {
 		queueStore.set({
 			currentIndex: 0,
-			items: newQueue
+			items: await getNewQueue()
 		});
 	};
 
@@ -59,6 +63,33 @@
 	$: if ($queueStore.items.length > $queueStore.currentIndex) {
 		currentInQueue = $queueStore.items[$queueStore.currentIndex].id === itemId;
 	}
+
+	const onContextMenu = () => {
+		showMenu({
+			items: [
+				{
+					label: 'Play next',
+					event: () => {
+						queueStore.update((store: QueueStore) => ({
+							...store,
+							items: [
+								...store.items.slice(0, store.currentIndex + 1),
+								{
+									albumId,
+									name,
+									artist,
+									album,
+									year,
+									id: itemId
+								},
+								...store.items.slice(store.currentIndex + 1)
+							]
+						}));
+					}
+				}
+			]
+		});
+	};
 </script>
 
 <button
@@ -72,6 +103,7 @@
 	on:mouseleave={() => {
 		hovering = false;
 	}}
+	on:contextmenu|preventDefault={onContextMenu}
 >
 	<div class="image-container">
 		<img

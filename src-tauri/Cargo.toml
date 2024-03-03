@@ -21,6 +21,7 @@ tauri = { version = "1.6.0", features = ["http-request"] }
 reqwest = "0.11.24"
 anyhow = "1.0.80"
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-context-menu = "0.7.1"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.

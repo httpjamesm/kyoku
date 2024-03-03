@@ -36,6 +36,7 @@
 	"dependencies": {
 		"@tauri-apps/api": "^1.5.3",
 		"svelte-french-toast": "^1.2.0",
-		"svelte-icons": "^2.1.0"
+		"svelte-icons": "^2.1.0",
+		"tauri-plugin-context-menu": "^0.7.0"
 	}
 }
