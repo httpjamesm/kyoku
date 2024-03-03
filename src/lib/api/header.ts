@@ -7,7 +7,7 @@ export const getHeaders = async () => {
 
 	try {
 		version = await getVersion();
-	} catch {}
+	} catch { }
 
 	let deviceId = window.localStorage.getItem('deviceId');
 

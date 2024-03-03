@@ -1,3 +1,4 @@
+import { secondsToTicks } from '$lib/utils/ticks';
 import { Body, getClient } from '@tauri-apps/api/http';
 import { getHeaders } from './header';
 import { getUrl } from './url';
@@ -21,5 +22,17 @@ export const reportFinishedPlayback = async (id: string) => {
 
 	await client.post(`${getUrl(true)}/PlayedItems/${id}`, Body.text(''), {
 		headers: await getHeaders()
+	});
+};
+
+export const reportPlaybackProgress = async (seconds: number, id: string) => {
+	const ticks = secondsToTicks(seconds);
+
+	const client = await getClient();
+
+	await client.post(`${getUrl(true)}/PlayingItems/${id}/Progress`, Body.text(''), {
+		query: {
+			positionTicks: ticks.toString()
+		}
 	});
 };

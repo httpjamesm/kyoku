@@ -35,3 +35,9 @@ export const formatMinutesShort = (minutes: number) => {
 	const seconds = Math.round((minutes - wholeMinutes) * 60);
 	return `${wholeMinutes}:${seconds.toString().padStart(2, '0')}`;
 };
+
+export const secondsToTicks = (seconds: number) => {
+	const ticksPerSecond = 10000000;
+	const ticks = seconds * ticksPerSecond;
+	return Math.round(ticks);
+};

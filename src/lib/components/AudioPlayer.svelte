@@ -6,7 +6,11 @@
 	import type { QueueStore } from '$lib/stores/queue';
 	import { playbackProgressStore } from '$lib/stores/playing';
 	import { getItemThumbnail } from '$lib/api/image';
-	import { reportPlayback, reportFinishedPlayback } from '$lib/api/playback';
+	import {
+		reportPlayback,
+		reportFinishedPlayback,
+		reportPlaybackProgress
+	} from '$lib/api/playback';
 	import type { QueueItem } from '$lib/stores/queue';
 
 	let audioElement: HTMLAudioElement;
@@ -132,6 +136,9 @@
 
 		audioElement.ontimeupdate = () => {
 			const currentTime = audioElement.currentTime;
+			if (currentQueueItem) {
+				reportPlaybackProgress(currentTime, currentQueueItem.id);
+			}
 			const duration = audioElement.duration;
 			const progress = (currentTime / duration) * 100;
 			playbackProgressStore.set(progress);
