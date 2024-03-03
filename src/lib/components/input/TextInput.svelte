@@ -5,6 +5,12 @@
 	export let placeholder = '';
 	export let required = false;
 	export let type = 'text';
+
+	let input: HTMLInputElement;
+
+	export const focus = () => {
+		input.focus();
+	};
 </script>
 
 <div class="form-control">
@@ -12,11 +18,11 @@
 		<label for={id}>{label}</label>
 	{/if}
 	{#if type === 'text'}
-		<input {id} type="text" {placeholder} bind:value {required} />
+		<input {id} type="text" {placeholder} bind:value bind:this={input} {required} />
 	{:else if type === 'password'}
-		<input {id} type="password" {placeholder} bind:value {required} />
+		<input {id} type="password" {placeholder} bind:value bind:this={input} {required} />
 	{:else if type === 'url'}
-		<input {id} type="url" {placeholder} bind:value {required} />
+		<input {id} type="url" {placeholder} bind:value bind:this={input} {required} />
 	{/if}
 </div>
 

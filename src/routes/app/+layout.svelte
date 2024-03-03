@@ -7,6 +7,8 @@
 	import MdHome from 'svelte-icons/md/MdHome.svelte';
 	import MdLibraryMusic from 'svelte-icons/md/MdLibraryMusic.svelte';
 	import MdSearch from 'svelte-icons/md/MdSearch.svelte';
+	import { goto } from '$app/navigation';
+	import { onMount, onDestroy } from 'svelte';
 
 	let menuItems = [
 		{
@@ -45,6 +47,35 @@
 		audioPlayer.setProgress(percentage);
 		play();
 	}
+
+	const checkShortcut = (e: KeyboardEvent) => {
+		if (!e.ctrlKey && !e.metaKey) return;
+		const key = e.key.toLowerCase();
+		switch (key) {
+			case '3':
+			case 'k':
+				e.preventDefault();
+				goto('/app/search');
+				return;
+			case '2':
+			case 'l':
+				e.preventDefault();
+				goto('/app/library');
+				return;
+			case '1':
+				e.preventDefault();
+				goto('/app/home');
+				return;
+		}
+	};
+
+	onMount(() => {
+		window.addEventListener('keydown', checkShortcut);
+	});
+
+	onDestroy(() => {
+		window.removeEventListener('keydown', checkShortcut);
+	});
 
 	// Set the context
 	setContext(playerContextKey, { play, pause, isPlaying, skip, prev, setProgress });

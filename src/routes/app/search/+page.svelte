@@ -7,6 +7,9 @@
 	import QueueComponentButton from '$lib/components/QueueComponentButton.svelte';
 	import Divider from '$lib/components/Divider.svelte';
 	import { playNow } from '$lib/utils/queue';
+	import { onMount } from 'svelte';
+
+	let searchInput: TextInput;
 
 	let searchTerm = '';
 
@@ -17,10 +20,13 @@
 	const onSearchHandler = async () => {
 		try {
 			const items = await searchLibrary(searchTerm);
-			console.log(items);
 			results = items;
 		} catch {}
 	};
+
+	onMount(() => {
+		searchInput.focus();
+	});
 </script>
 
 <br />
@@ -32,6 +38,7 @@
 				id="search-input"
 				placeholder="Search for songs, albums, artists..."
 				bind:value={searchTerm}
+				bind:this={searchInput}
 				required
 			/>
 		</form>
