@@ -73,7 +73,7 @@
 		width: 100%;
 		background-color: #202020;
 		height: 4rem;
-		position: absolute;
+		position: fixed;
 		bottom: 0;
 		left: 0;
 		padding: 0.5rem 1rem;

@@ -76,7 +76,8 @@
 
 		.interactive {
 			position: relative;
-			padding: 1rem;
+			padding: 4rem 1rem;
+			padding-bottom: 10rem;
 			box-sizing: border-box;
 			color: white;
 			min-height: 100vh;

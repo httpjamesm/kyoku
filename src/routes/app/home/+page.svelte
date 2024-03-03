@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getRecentlyPlayed } from '$lib/api/getMusic';
+	import { getRecentlyPlayed, getSuggestions } from '$lib/api/getMusic';
 	import toast from 'svelte-french-toast';
 	import RectangularItem from '$lib/components/RectangularItem.svelte';
 
 	let recentlyPlayed: any[] = [];
+	let suggestions: any[] = [];
 
 	const init = async () => {
 		try {
 			recentlyPlayed = await getRecentlyPlayed();
+			suggestions = await getSuggestions();
 		} catch (e) {
 			toast.error((e as Error).message);
 		}
@@ -34,6 +36,21 @@
 	{/each}
 </div>
 
+<h4 class="above-heading">SUGGESTIONS</h4>
+<h3 style="margin-top: 0;">Quick Picks</h3>
+<div class="row">
+	{#each suggestions as item (item.Id)}
+		<RectangularItem
+			itemId={item.Id}
+			albumId={item.AlbumId}
+			name={item.Name}
+			artist={item.AlbumArtist}
+			album={item.Album}
+			year={item.ProductionYear}
+		/>
+	{/each}
+</div>
+
 <style lang="scss">
 	.row {
 		display: flex;
@@ -42,5 +59,11 @@
 		overflow: none;
 		height: fit-content;
 		width: 100%;
+	}
+
+	.above-heading {
+		font-weight: 200;
+		margin-bottom: 0;
+		font-size: 0.7rem;
 	}
 </style>
