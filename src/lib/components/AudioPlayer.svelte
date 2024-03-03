@@ -73,14 +73,28 @@
 		};
 	}
 
+	function isRelevantChange(prevState: QueueStore, currentState: QueueStore) {
+		// Check if the current index has changed
+		if (prevState.currentIndex !== currentState.currentIndex) {
+			return true;
+		}
+
+		// Check if the current track has changed
+		const currentTrackChanged =
+			prevState.items[prevState.currentIndex]?.id !==
+			currentState.items[currentState.currentIndex]?.id;
+
+		return currentTrackChanged;
+	}
+
 	queueStore.subscribe(($queueStore) => {
 		if (!audioElement) return;
 
 		const { items: currentQueueItems, currentIndex } = $queueStore;
-		const currentQueueItem = currentQueueItems[currentIndex];
 
 		// Only update the player if the track has ended or on initial load
-		if (previousQueueState.currentIndex !== currentIndex || !previousQueueState.items.length) {
+		if (isRelevantChange(previousQueueState, $queueStore)) {
+			const currentQueueItem = currentQueueItems[currentIndex];
 			if (currentQueueItem) {
 				updatePlayer(currentQueueItem);
 			}

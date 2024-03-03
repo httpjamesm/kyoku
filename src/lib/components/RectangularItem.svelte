@@ -59,6 +59,7 @@
 			currentIndex: 0,
 			items: await getNewQueue()
 		});
+		play();
 	};
 
 	let currentInQueue = false;
