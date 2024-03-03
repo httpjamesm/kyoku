@@ -93,7 +93,9 @@
 			<div class="details">
 				<p class="name">{$playingStore?.track.name}</p>
 				<p class="metadata">
-					{$playingStore?.track.artist} • {$playingStore?.track.album} • {$playingStore?.track.year}
+					{$playingStore?.track.artist} •
+					<a href="/app/album?id={$playingStore?.track.albumId}">{$playingStore?.track.album}</a>
+					• {$playingStore?.track.year}
 				</p>
 			</div>
 			<div class="buttons">
@@ -188,6 +190,15 @@
 
 				.metadata {
 					color: #7c7c7c;
+
+					a {
+						color: inherit;
+						text-decoration: none;
+
+						&:hover {
+							text-decoration: underline;
+						}
+					}
 				}
 			}
 
