@@ -77,6 +77,7 @@
 		display: flex;
 		justify-content: space-between;
 		z-index: 5;
+		align-items: center;
 
 		.progress-bar {
 			position: absolute;
