@@ -3,6 +3,7 @@
 	import MdSkipNext from 'svelte-icons/md/MdSkipNext.svelte';
 	import MdPause from 'svelte-icons/md/MdPause.svelte';
 	import MdPlayArrow from 'svelte-icons/md/MdPlayArrow.svelte';
+	import MdArrowDropUp from 'svelte-icons/md/MdArrowDropUp.svelte';
 	import { playerContextKey } from '$lib/context/player';
 	import type { PlayerContextKey } from '$lib/context/player';
 	import { getContext } from 'svelte';
@@ -54,17 +55,24 @@
 		</button>
 	</div>
 	<div class="current-track-container">
-		<img
-			src="{getUrl()}/Items/{$playingStore?.track
-				.albumId}/Images/Primary?fillHeight=334&fillWidth=334&quality=96"
-			alt="{$playingStore?.track.name} album art"
-		/>
-		<div class="details">
-			<p class="name">{$playingStore?.track.name}</p>
-			<p class="metadata">
-				{$playingStore?.track.artist} • {$playingStore?.track.album} • {$playingStore?.track.year}
-			</p>
-		</div>
+		{#if $playingStore}
+			<img
+				src="{getUrl()}/Items/{$playingStore?.track
+					.albumId}/Images/Primary?fillHeight=334&fillWidth=334&quality=96"
+				alt="{$playingStore?.track.name} album art"
+			/>
+			<div class="details">
+				<p class="name">{$playingStore?.track.name}</p>
+				<p class="metadata">
+					{$playingStore?.track.artist} • {$playingStore?.track.album} • {$playingStore?.track.year}
+				</p>
+			</div>
+		{/if}
+	</div>
+	<div class="buttons">
+		<button>
+			<MdArrowDropUp />
+		</button>
 	</div>
 </footer>
 
