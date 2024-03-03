@@ -93,7 +93,7 @@
 			position: absolute;
 			z-index: 2;
 
-			padding: 1rem 2rem;
+			padding: 2rem;
 			box-sizing: border-box;
 			display: flex;
 			align-items: center;
@@ -131,6 +131,7 @@
 							text-overflow: ellipsis;
 							overflow: hidden;
 							white-space: nowrap;
+							max-width: 25rem;
 						}
 
 						p {
