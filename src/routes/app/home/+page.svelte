@@ -68,6 +68,7 @@
 			artist={item.AlbumArtist}
 			album={item.Album}
 			year={item.ProductionYear}
+			type="album"
 		/>
 	{/each}
 </div>

@@ -13,8 +13,6 @@
 	import { isPlayingStore } from '$lib/stores/playing';
 
 	const { play, prev, pause, skip } = getContext<PlayerContextKey>(playerContextKey);
-
-	let playing = false;
 </script>
 
 <footer class="footer">
@@ -24,7 +22,7 @@
 		</button>
 		<button
 			on:click={() => {
-				if (playing) {
+				if ($isPlayingStore) {
 					pause();
 					return;
 				}

@@ -5,7 +5,7 @@
 	import { getContext } from 'svelte';
 	import { isPlayingStore } from '$lib/stores/playing';
 	import { queueStore } from '$lib/stores/queue';
-	import { getInstantMixFromSong } from '$lib/api/getMusic';
+	import { getInstantMixFromSong, getParentItems } from '$lib/api/getMusic';
 	import MdPlayArrow from 'svelte-icons/md/MdPlayArrow.svelte';
 	import MdPause from 'svelte-icons/md/MdPause.svelte';
 	import { fade } from 'svelte/transition';
@@ -23,9 +23,23 @@
 	let hovering = false;
 
 	const startTrack = async () => {
-		const mix = await getInstantMixFromSong(itemId);
+		let items: any[] = [];
 
-		const newQueue = mix.map((item: any) => ({
+		switch (type) {
+			case 'song':
+				items = await getInstantMixFromSong('Items', itemId);
+				break;
+			case 'album':
+				items = [
+					...(await getParentItems(itemId)),
+					...(await getInstantMixFromSong('Albums', itemId))
+				];
+				break;
+		}
+
+		console.log(items);
+
+		const newQueue = items.map((item: any) => ({
 			albumId: item.AlbumId,
 			name: item.Name,
 			artist: item.AlbumArtist,
@@ -50,9 +64,7 @@
 <button
 	class="item-container"
 	on:click={() => {
-		if (type === 'song') {
-			startTrack();
-		}
+		startTrack();
 	}}
 	on:mouseenter={() => {
 		hovering = true;
@@ -88,6 +100,8 @@
 						{:else}
 							<MdPlayArrow />
 						{/if}
+					{:else}
+						<MdPlayArrow />
 					{/if}
 				</div>
 			</div>

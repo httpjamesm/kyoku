@@ -44,10 +44,27 @@ export const getSuggestions = async (type: string = 'Audio') => {
 	return (res.data as any).Items;
 };
 
-export const getInstantMixFromSong = async (itemId: string) => {
+export const getParentItems = async (id: string) => {
 	const client = await getClient();
 
-	const res = await client.get(`${getUrl(false)}/Items/${itemId}/InstantMix`, {
+	const res = await client.get(`${getUrl(true)}/Items`, {
+		headers: await getHeaders(),
+
+		query: {
+			ParentId: id,
+			SortBy: 'ParentIndexNumber,IndexNumber,SortName'
+		}
+	});
+
+	console.log(res);
+
+	return (res.data as any).Items;
+};
+
+export const getInstantMixFromSong = async (type: string = 'Items', itemId: string) => {
+	const client = await getClient();
+
+	const res = await client.get(`${getUrl(false)}/${type}/${itemId}/InstantMix`, {
 		headers: await getHeaders(),
 		responseType: ResponseType.JSON
 	});
