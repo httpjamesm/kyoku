@@ -70,7 +70,11 @@
 				showExpanded = !showExpanded;
 			}}
 		>
-			<MdArrowDropUp />
+			{#if !showExpanded}
+				<MdArrowDropUp />
+			{:else}
+				<MdArrowDropDown />
+			{/if}
 		</button>
 	</div>
 </footer>
