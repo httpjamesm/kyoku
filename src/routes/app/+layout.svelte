@@ -4,8 +4,18 @@
 	import { setContext } from 'svelte';
 	import PlayingFooter from '$lib/components/PlayingFooter.svelte';
 	import { page } from '$app/stores';
+	import MdHome from 'svelte-icons/md/MdHome.svelte';
+	import MdLibraryMusic from 'svelte-icons/md/MdLibraryMusic.svelte';
+	import MdSearch from 'svelte-icons/md/MdSearch.svelte';
 
-	let menuItems = ['Home', 'Library', 'Search'];
+	let menuItems = [
+		{
+			name: 'Home',
+			icon: MdHome
+		},
+		{ name: 'Library', icon: MdLibraryMusic },
+		{ name: 'Search', icon: MdSearch }
+	];
 
 	let audioPlayer: any;
 
@@ -16,10 +26,6 @@
 
 	function pause() {
 		audioPlayer.pause();
-	}
-
-	function setSrc(src: string) {
-		playerSrc = src;
 	}
 
 	function isPlaying() {
@@ -41,7 +47,7 @@
 	}
 
 	// Set the context
-	setContext(playerContextKey, { play, pause, setSrc, isPlaying, skip, prev, setProgress });
+	setContext(playerContextKey, { play, pause, isPlaying, skip, prev, setProgress });
 </script>
 
 <div class="blob-container">
@@ -54,9 +60,12 @@
 			<nav>
 				{#each menuItems as menuItem}
 					<a
-						href="/app/{menuItem.toLowerCase()}"
-						class:selected={$page.url.pathname === `/app/${menuItem.toLowerCase()}`}>{menuItem}</a
+						href="/app/{menuItem.name.toLowerCase()}"
+						class:selected={$page.url.pathname === `/app/${menuItem.name.toLowerCase()}`}
 					>
+						<div class="icon"><svelte:component this={menuItem.icon} /></div>
+						{menuItem.name}
+					</a>
 				{/each}
 			</nav>
 		</header>
@@ -96,9 +105,25 @@
 
 					a {
 						color: white;
+						padding: 0.5rem;
+						border-radius: 10px;
+						transition-duration: 250ms;
+
+						display: flex;
+						gap: 0.5rem;
+						align-items: center;
+
+						&:hover {
+							background-color: rgb(255, 255, 255, 0.2);
+						}
 
 						&.selected {
 							font-weight: 900;
+						}
+
+						.icon {
+							height: 2rem;
+							width: 2rem;
 						}
 
 						font-size: 2rem;
