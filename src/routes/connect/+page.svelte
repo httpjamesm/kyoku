@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { getVersion } from '@tauri-apps/api/app';
 	import { onMount } from 'svelte';
+	import getApiKey from '$lib/api/getApiKey';
+	import toast from 'svelte-french-toast';
 
 	let version = '0.0.0';
 
@@ -13,6 +15,27 @@
 	onMount(() => {
 		tryGetVersion();
 	});
+
+	let serverUrl = '';
+	let username = '';
+	let password = '';
+
+	const onFormSubmitHandler = async () => {
+		window.localStorage.setItem('serverUrl', serverUrl);
+		try {
+			const res = await getApiKey(username, password);
+
+			const token = res.AccessToken;
+
+			if (!token) {
+				throw new Error("Server didn't return an access token");
+			}
+
+			window.localStorage.setItem('accessToken', token);
+		} catch (e) {
+			toast.error((e as Error).message);
+		}
+	};
 </script>
 
 <div class="wrapper">
@@ -21,20 +44,38 @@
 		<div class="form-container">
 			<h1>Connect to <span class="jellyfin">Jellyfin</span></h1>
 			<br />
-			<form>
+			<form on:submit|preventDefault={onFormSubmitHandler}>
 				<div class="form-control">
 					<label for="server-url-input">Server URL</label>
-					<input id="server-url-input" type="url" placeholder="https://server.com..." required />
+					<input
+						id="server-url-input"
+						type="url"
+						placeholder="https://server.com..."
+						bind:value={serverUrl}
+						required
+					/>
 				</div>
 				<br />
 				<div class="form-control">
 					<label for="username-input">Username</label>
-					<input id="username-input" type="text" placeholder="musician" required />
+					<input
+						id="username-input"
+						type="text"
+						placeholder="musician"
+						bind:value={username}
+						required
+					/>
 				</div>
 				<br />
 				<div class="form-control">
 					<label for="password-input">Password</label>
-					<input id="password-input" type="password" placeholder="•••••••" required />
+					<input
+						id="password-input"
+						type="password"
+						placeholder="•••••••"
+						bind:value={password}
+						required
+					/>
 				</div>
 				<br />
 				<button type="submit">Connect</button>
