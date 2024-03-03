@@ -6,12 +6,22 @@
 	import type { QueueStore } from '$lib/stores/queue';
 	import { playbackProgressStore } from '$lib/stores/playing';
 	import { getItemThumbnail } from '$lib/api/image';
+	import { reportPlayback, reportFinishedPlayback } from '$lib/api/playback';
+	import type { QueueItem } from '$lib/stores/queue';
 
 	let audioElement: HTMLAudioElement;
 	let previousQueueState = {
 		items: [],
 		currentIndex: 0
 	} as QueueStore;
+
+	let currentQueueItem: QueueItem | null = null;
+
+	$: if ($queueStore) {
+		if ($queueStore.items.length > $queueStore.currentIndex) {
+			currentQueueItem = $queueStore.items[$queueStore.currentIndex];
+		}
+	}
 
 	export function play() {
 		audioElement.play();
@@ -109,6 +119,9 @@
 
 	$: if (audioElement) {
 		audioElement.onended = () => {
+			if (currentQueueItem) {
+				reportFinishedPlayback(currentQueueItem.id);
+			}
 			skip();
 			// Explicitly call updatePlayer for the next track after skip
 			const { items, currentIndex } = $queueStore;
@@ -138,9 +151,15 @@
 	bind:this={audioElement}
 	on:play={() => {
 		isPlayingStore.set(true);
+		if (currentQueueItem) {
+			reportPlayback(currentQueueItem.id, true);
+		}
 	}}
 	on:pause={() => {
 		isPlayingStore.set(false);
+		if (currentQueueItem) {
+			reportPlayback(currentQueueItem.id, false);
+		}
 	}}
 >
 	<source type="audio/mp3" />
