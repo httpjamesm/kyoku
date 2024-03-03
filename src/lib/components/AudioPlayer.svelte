@@ -118,7 +118,7 @@
 	});
 
 	const getSrcFromItemId = (id: string) => {
-		return `${getUrl(false)}/Audio/${id}/universal?audioCodec=mp3&api_key=${window.localStorage.getItem('accessToken')}&Container=mp3,aac,m4a|aac,m4b|aac,flac,alac,m4a|alac,m4b|alac,wav&StartTimeTicks=0`;
+		return `${getUrl(false)}/Audio/${id}/universal?audioCodec=aac&api_key=${window.localStorage.getItem('accessToken')}&Container=mp3,aac,m4a|aac,m4b|aac,flac,alac,m4a|alac,m4b|alac,wav&StartTimeTicks=0`;
 	};
 
 	$: if (audioElement) {
@@ -169,6 +169,6 @@
 		}
 	}}
 >
-	<source type="audio/mp3" />
+	<source type="audio/aac" />
 	Your browser does not support the audio element.
 </audio>
