@@ -20,6 +20,7 @@
 	import { getById } from '$lib/api/getMusic';
 	import { markFavourite, unmarkFavourite } from '$lib/api/favourite';
 	import toast from 'svelte-french-toast';
+	import { onDestroy } from 'svelte';
 
 	let showExpanded = false;
 
@@ -51,13 +52,32 @@
 	};
 
 	const { play, prev, pause, skip } = getContext<PlayerContextKey>(playerContextKey);
+
+	const checkShortcut = (e: KeyboardEvent) => {
+		if (e.key === 'Escape') {
+			showExpanded = false;
+		}
+	};
+
+	onDestroy(() => {
+		window.removeEventListener('keydown', checkShortcut);
+	});
 </script>
 
 {#if showExpanded}
 	<NowPlayingExpanded />
 {/if}
 
-<footer class="footer">
+<footer
+	class="footer"
+	role="button"
+	tabindex="0"
+	on:click={(e) => {
+		if (e.target === e.currentTarget) {
+			showExpanded = !showExpanded;
+		}
+	}}
+>
 	<TrackProgressBar progress={$playbackProgressStore} />
 	<div class="buttons">
 		<button on:click={prev}>
@@ -113,6 +133,7 @@
 		<button
 			on:click={() => {
 				showExpanded = !showExpanded;
+				window.addEventListener('keydown', checkShortcut);
 			}}
 		>
 			{#if !showExpanded}
@@ -140,6 +161,9 @@
 		align-items: center;
 
 		box-shadow: 0 0 15px 8px black;
+
+		user-select: none;
+		-webkit-user-select: none;
 
 		.buttons {
 			display: flex;

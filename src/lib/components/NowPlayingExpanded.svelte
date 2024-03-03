@@ -3,7 +3,6 @@
 	import { getItemThumbnail } from '$lib/api/image';
 	import { playingStore } from '$lib/stores/playing';
 	import { queueStore } from '$lib/stores/queue';
-	import QueueComponent from './QueueComponent.svelte';
 	import Divider from './Divider.svelte';
 	import QueueComponentButton from './QueueComponentButton.svelte';
 </script>
