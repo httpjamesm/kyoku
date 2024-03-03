@@ -38,6 +38,24 @@ export const getRecentlyPlayed = async () => {
 	return (res.data as any).Items;
 };
 
+export const getLibrary = async (sort = 'DateCreated', order = 'Descending') => {
+	const client = await getClient();
+
+	const res = await client.get(`${getUrl(true)}/Items`, {
+		headers: await getHeaders(),
+		query: {
+			ParentId: window.localStorage.getItem('libraryId') as string,
+			SortBy: sort,
+			SortOrder: order,
+			IncludeItemTypes: 'MusicAlbum',
+			Limit: '100',
+			Recursive: 'true'
+		}
+	});
+
+	return (res.data as any).Items;
+};
+
 export const getSuggestions = async (type: string = 'Audio') => {
 	const client = await getClient();
 	const res = await client.get(`${getUrl(true)}/suggestions`, {
