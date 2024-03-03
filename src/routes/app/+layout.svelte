@@ -119,6 +119,7 @@
 
 						&.selected {
 							font-weight: 900;
+							background-color: rgb(255, 255, 255, 0.4);
 						}
 
 						.icon {
