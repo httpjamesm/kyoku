@@ -33,6 +33,7 @@ export const reportPlaybackProgress = async (seconds: number, id: string) => {
 	await client.post(`${getUrl(true)}/PlayingItems/${id}/Progress`, Body.text(''), {
 		query: {
 			positionTicks: ticks.toString()
-		}
+		},
+		headers: await getHeaders()
 	});
 };
