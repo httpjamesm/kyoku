@@ -4,6 +4,7 @@
 	import MdPause from 'svelte-icons/md/MdPause.svelte';
 	import MdPlayArrow from 'svelte-icons/md/MdPlayArrow.svelte';
 	import MdArrowDropUp from 'svelte-icons/md/MdArrowDropUp.svelte';
+	import MdArrowDropDown from 'svelte-icons/md/MdArrowDropDown.svelte';
 	import { playerContextKey } from '$lib/context/player';
 	import type { PlayerContextKey } from '$lib/context/player';
 	import { getContext } from 'svelte';
