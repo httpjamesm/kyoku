@@ -15,12 +15,6 @@
 <style lang="scss">
 	.queue-component-button {
 		all: unset;
-		cursor: pointer;
-
-		transition-duration: 100ms;
-
-		&:hover {
-			opacity: 0.5;
-		}
+		width: 100%;
 	}
 </style>
