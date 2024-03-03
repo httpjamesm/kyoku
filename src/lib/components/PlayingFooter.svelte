@@ -12,9 +12,16 @@
 	import { getUrl } from '$lib/api/url';
 	import { isPlayingStore } from '$lib/stores/playing';
 	import { playbackProgressStore } from '$lib/stores/playing';
+	import NowPlayingExpanded from './NowPlayingExpanded.svelte';
+
+	let showExpanded = false;
 
 	const { play, prev, pause, skip } = getContext<PlayerContextKey>(playerContextKey);
 </script>
+
+{#if showExpanded}
+	<NowPlayingExpanded />
+{/if}
 
 <footer class="footer">
 	<hr class="progress-bar" style="width: {$playbackProgressStore}%" />
@@ -58,7 +65,11 @@
 		{/if}
 	</div>
 	<div class="buttons">
-		<button>
+		<button
+			on:click={() => {
+				showExpanded = !showExpanded;
+			}}
+		>
 			<MdArrowDropUp />
 		</button>
 	</div>

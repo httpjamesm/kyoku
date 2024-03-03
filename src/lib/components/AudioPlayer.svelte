@@ -94,7 +94,6 @@
 			const currentTime = audioElement.currentTime;
 			const duration = audioElement.duration;
 			const progress = (currentTime / duration) * 100;
-			console.log(progress);
 			playbackProgressStore.set(progress);
 		};
 	}
