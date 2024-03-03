@@ -4,10 +4,15 @@
 	import TopResult from '$lib/components/TopResult.svelte';
 	import { getItemEnumFromJellyfinItem } from '$lib/enums/item';
 	import { Item } from '$lib/enums/item';
+	import QueueComponentButton from '$lib/components/QueueComponentButton.svelte';
+	import Divider from '$lib/components/Divider.svelte';
+	import { playNow } from '$lib/utils/queue';
 
 	let searchTerm = '';
 
 	let results: any[] = [];
+
+	$: songResults = results.filter((result) => result.Type === 'Audio');
 
 	const onSearchHandler = async () => {
 		try {
@@ -44,6 +49,25 @@
 						? results[0].Name
 						: results[0].Album}
 				/>
+				{#if results.length > 1}
+					<br />
+					<h3>Songs</h3>
+
+					{#each songResults as item, index (item.Id)}
+						<QueueComponentButton
+							albumId={item.AlbumId}
+							name={item.Name}
+							artist={item.AlbumArtist}
+							itemId={item.Id}
+							on:click={() => {
+								playNow(getItemEnumFromJellyfinItem(item.Type), item.Id);
+							}}
+						/>
+						{#if index !== songResults.length}
+							<Divider />
+						{/if}
+					{/each}
+				{/if}
 			</div>
 		{/if}
 	</div>

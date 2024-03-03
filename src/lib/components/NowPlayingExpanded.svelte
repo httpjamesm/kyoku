@@ -4,6 +4,8 @@
 	import { playingStore } from '$lib/stores/playing';
 	import { queueStore } from '$lib/stores/queue';
 	import QueueComponent from './QueueComponent.svelte';
+	import Divider from './Divider.svelte';
+	import QueueComponentButton from './QueueComponentButton.svelte';
 </script>
 
 <div class="now-playing-expanded-container" transition:fade={{ duration: 250 }}>
@@ -18,24 +20,20 @@
 			<h3>Queue</h3>
 			<div class="queue-container">
 				{#each $queueStore?.items as item, index}
-					<button
-						class="queue-component-button"
+					<QueueComponentButton
 						on:click={() => {
 							queueStore.update((store) => ({
 								...store,
 								currentIndex: index
 							}));
 						}}
-					>
-						<QueueComponent
-							albumId={item.albumId}
-							name={item.name}
-							artist={item.artist}
-							itemId={item.id}
-						/>
-					</button>
+						albumId={item.albumId}
+						name={item.name}
+						artist={item.artist}
+						itemId={item.id}
+					/>
 					{#if index !== $queueStore?.items.length}
-						<hr class="divider" />
+						<Divider />
 					{/if}
 				{/each}
 			</div>
@@ -85,21 +83,6 @@
 			.queue-container {
 				overflow-y: auto;
 				height: 100%;
-
-				.queue-component-button {
-					all: unset;
-					cursor: pointer;
-
-					transition-duration: 100ms;
-
-					&:hover {
-						opacity: 0.5;
-					}
-				}
-
-				.divider {
-					border: 1px solid #1d1d1d;
-				}
 			}
 		}
 	}

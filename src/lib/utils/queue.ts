@@ -61,3 +61,12 @@ export const playNext = async (type: Item, id: string) => {
 		]
 	}));
 };
+
+export const playNow = async (type: Item, id: string) => {
+	const relevantItems = await getNewQueue(type, id);
+
+	queueStore.set({
+		currentIndex: 0,
+		items: relevantItems
+	});
+};
