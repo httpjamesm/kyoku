@@ -13,6 +13,7 @@
 	import { isPlayingStore } from '$lib/stores/playing';
 	import { playbackProgressStore } from '$lib/stores/playing';
 	import NowPlayingExpanded from './NowPlayingExpanded.svelte';
+	import TrackProgressBar from './TrackProgressBar.svelte';
 
 	let showExpanded = false;
 
@@ -24,7 +25,7 @@
 {/if}
 
 <footer class="footer">
-	<hr class="progress-bar" style="width: {$playbackProgressStore}%" />
+	<TrackProgressBar progress={$playbackProgressStore} />
 	<div class="buttons">
 		<button on:click={prev}>
 			<MdSkipPrevious />
@@ -93,13 +94,6 @@
 		justify-content: space-between;
 		z-index: 5;
 		align-items: center;
-
-		.progress-bar {
-			position: absolute;
-			top: -10px;
-			left: 0;
-			border: 2px solid #c957ff;
-		}
 
 		box-shadow: 0 0 15px 8px black;
 

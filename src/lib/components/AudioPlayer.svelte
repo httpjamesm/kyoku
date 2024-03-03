@@ -42,6 +42,10 @@
 		}));
 	}
 
+	export function setProgress(percentage: number) {
+		audioElement.currentTime = audioElement.duration * percentage;
+	}
+
 	// Function to update the player with a new track
 	function updatePlayer(track: any) {
 		audioElement.src = getSrcFromItemId(track.id);

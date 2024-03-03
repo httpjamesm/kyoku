@@ -5,6 +5,7 @@ export interface PlayerContextKey {
 	isPlaying: () => boolean;
 	skip: () => void;
 	prev: () => void;
+	setProgress: (percentage: number) => void;
 }
 
 export const playerContextKey = {} as PlayerContextKey;

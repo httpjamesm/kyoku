@@ -35,8 +35,14 @@
 		audioPlayer.prev();
 	}
 
+	function setProgress(percentage: number) {
+		pause();
+		audioPlayer.setProgress(percentage);
+		play();
+	}
+
 	// Set the context
-	setContext(playerContextKey, { play, pause, setSrc, isPlaying, skip, prev });
+	setContext(playerContextKey, { play, pause, setSrc, isPlaying, skip, prev, setProgress });
 </script>
 
 <div class="blob-container">
