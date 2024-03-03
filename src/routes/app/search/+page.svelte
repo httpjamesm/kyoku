@@ -8,6 +8,7 @@
 	import Divider from '$lib/components/Divider.svelte';
 	import { playNow } from '$lib/utils/queue';
 	import { onMount } from 'svelte';
+	import { pushState } from '$app/navigation';
 
 	let searchInput: TextInput;
 
@@ -26,6 +27,8 @@
 
 	onMount(() => {
 		searchInput.focus();
+		searchTerm = new URLSearchParams(window.location.search).get('term') || '';
+		console.log(searchTerm);
 	});
 </script>
 
@@ -39,6 +42,9 @@
 				placeholder="Search for songs, albums, artists..."
 				bind:value={searchTerm}
 				bind:this={searchInput}
+				on:change={() => {
+					pushState(`/app/search?term=${searchTerm}`, {});
+				}}
 				required
 			/>
 		</form>

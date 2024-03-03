@@ -27,41 +27,43 @@
 	};
 </script>
 
-<div
-	class="result-container"
-	style="background-image: url('{getItemThumbnail(albumId, 1024, 512)}')"
->
-	<div class="result-overlay" />
-	<div class="result-info-parent">
-		<div class="result-info-container">
-			<div class="art-container">
-				<img src={getItemThumbnail(albumId, 512, 512)} alt="album art" class="album-art" />
-			</div>
-			<div class="details">
-				<div class="metadata">
-					<h1>{name}</h1>
-					<p>
-						{type} • {artist} • {album} ({year})
-					</p>
+<a class="link" href="/app/album?id={albumId}">
+	<div
+		class="result-container"
+		style="background-image: url('{getItemThumbnail(albumId, 1024, 512)}')"
+	>
+		<div class="result-overlay" />
+		<div class="result-info-parent">
+			<div class="result-info-container">
+				<div class="art-container">
+					<img src={getItemThumbnail(albumId, 512, 512)} alt="album art" class="album-art" />
 				</div>
-				<div class="buttons">
-					<button class="primary" on:click={onPlayHandler}>
-						<div class="icon">
-							<MdPlayArrow />
-						</div>
-						Play
-					</button>
-					<button class="secondary" on:click={onPlayNextHandler}>
-						<div class="icon">
-							<MdQueue />
-						</div>
-						Play Next
-					</button>
+				<div class="details">
+					<div class="metadata">
+						<h1>{name}</h1>
+						<p>
+							{type} • {artist} • {album} ({year})
+						</p>
+					</div>
+					<div class="buttons">
+						<button class="primary" on:click|stopPropagation={onPlayHandler}>
+							<div class="icon">
+								<MdPlayArrow />
+							</div>
+							Play
+						</button>
+						<button class="secondary" on:click|stopPropagation={onPlayNextHandler}>
+							<div class="icon">
+								<MdQueue />
+							</div>
+							Play Next
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+</a>
 
 <style lang="scss">
 	.result-container {
@@ -188,5 +190,10 @@
 				}
 			}
 		}
+	}
+
+	.link {
+		all: unset;
+		cursor: pointer;
 	}
 </style>
