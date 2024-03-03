@@ -29,6 +29,7 @@
 			album={item.Album}
 			year={item.ProductionYear}
 			type="album"
+			favourite={item.UserData.IsFavorite}
 		/>
 	{/each}
 </div>

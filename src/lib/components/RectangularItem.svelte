@@ -11,6 +11,8 @@
 	import { fade } from 'svelte/transition';
 	import { showMenu } from 'tauri-plugin-context-menu';
 	import type { QueueStore } from '$lib/stores/queue';
+	import { markFavourite, unmarkFavourite } from '$lib/api/favourite';
+	import toast from 'svelte-french-toast';
 
 	const { play, pause, setSrc } = getContext<PlayerContextKey>(playerContextKey);
 
@@ -21,6 +23,7 @@
 	export let artist: string;
 	export let year: number;
 	export let type: 'song' | 'album' = 'song';
+	export let favourite = false;
 
 	let hovering = false;
 
@@ -85,6 +88,28 @@
 								...store.items.slice(store.currentIndex + 1)
 							]
 						}));
+					}
+				},
+				{
+					is_separator: true
+				},
+				{
+					label: 'Favourite',
+					checked: favourite,
+					event: async () => {
+						favourite = !favourite;
+						try {
+							if (!favourite) {
+								unmarkFavourite(itemId);
+							} else {
+								markFavourite(itemId);
+							}
+						} catch (e) {
+							favourite = !favourite;
+							// @ts-ignore
+							toast.error(e.message);
+							return;
+						}
 					}
 				}
 			]
