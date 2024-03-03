@@ -3,10 +3,11 @@
 	import { playerContextKey } from '$lib/context/player';
 	import type { PlayerContextKey } from '$lib/context/player';
 	import { getContext } from 'svelte';
-	import { playingStore } from '$lib/stores/playing';
+	import { isPlayingStore } from '$lib/stores/playing';
 	import { queueStore } from '$lib/stores/queue';
 	import { getInstantMixFromSong } from '$lib/api/getMusic';
 	import MdPlayArrow from 'svelte-icons/md/MdPlayArrow.svelte';
+	import MdPause from 'svelte-icons/md/MdPause.svelte';
 	import { fade } from 'svelte/transition';
 
 	const { play, pause, setSrc } = getContext<PlayerContextKey>(playerContextKey);
@@ -39,7 +40,11 @@
 		});
 	};
 
-	$: isCurrentlyPlaying = $queueStore.items[$queueStore.currentIndex].id === itemId;
+	let currentInQueue = false;
+
+	$: if ($queueStore.items.length > $queueStore.currentIndex) {
+		currentInQueue = $queueStore.items[$queueStore.currentIndex].id === itemId;
+	}
 </script>
 
 <button
@@ -61,7 +66,7 @@
 			src="{getUrl()}/Items/{albumId}/Images/Primary?fillHeight=334&fillWidth=334&quality=96"
 			alt="{name} album art"
 		/>
-		{#if hovering || isCurrentlyPlaying}
+		{#if hovering || currentInQueue}
 			<div
 				class="playing-overlay"
 				transition:fade={{
@@ -70,12 +75,16 @@
 			>
 				<div class="icon">
 					{#if type === 'song'}
-						{#if $queueStore?.items.length > $queueStore.currentIndex && isCurrentlyPlaying}
-							<img
-								style="height: 100%; width: 100%;"
-								src="/icons/now-playing.svg"
-								alt="now playing"
-							/>
+						{#if $queueStore?.items.length > $queueStore?.currentIndex && currentInQueue}
+							{#if $isPlayingStore}
+								<img
+									style="height: 100%; width: 100%;"
+									src="/icons/now-playing.svg"
+									alt="now playing"
+								/>
+							{:else}
+								<MdPause />
+							{/if}
 						{:else}
 							<MdPlayArrow />
 						{/if}
@@ -84,8 +93,10 @@
 			</div>
 		{/if}
 	</div>
-	<p class="name">{name}</p>
-	<p class="artist">{artist}</p>
+	<div class="metadata">
+		<p class="name">{name}</p>
+		<p class="artist">{type[0].toUpperCase()}{type.slice(1)} • {artist}</p>
+	</div>
 </button>
 
 <style lang="scss">
@@ -93,20 +104,24 @@
 		all: unset;
 		cursor: pointer;
 
-		text-align: center;
+		/* text-align: center; */
 		width: 10rem;
 
-		p {
-			margin: 0;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			text-wrap: nowrap;
-			white-space: nowrap;
-		}
+		.metadata {
+			margin-top: 0.25rem;
 
-		.artist {
-			color: #7c7c7c;
-			/* font-size: 0.8rem; */
+			p {
+				margin: 0;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				text-wrap: nowrap;
+				white-space: nowrap;
+			}
+
+			.artist {
+				color: #7c7c7c;
+				/* font-size: 0.8rem; */
+			}
 		}
 
 		.image-container {

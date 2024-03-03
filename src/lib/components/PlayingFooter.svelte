@@ -8,26 +8,13 @@
 	import { playerContextKey } from '$lib/context/player';
 	import type { PlayerContextKey } from '$lib/context/player';
 	import { getContext } from 'svelte';
-	import { onMount, onDestroy } from 'svelte';
 	import { playingStore } from '$lib/stores/playing';
 	import { getUrl } from '$lib/api/url';
+	import { isPlayingStore } from '$lib/stores/playing';
 
-	const { play, prev, pause, isPlaying, skip } = getContext<PlayerContextKey>(playerContextKey);
+	const { play, prev, pause, skip } = getContext<PlayerContextKey>(playerContextKey);
 
 	let playing = false;
-
-	let intervalId: number;
-
-	onMount(() => {
-		intervalId = setInterval(() => {
-			playing = isPlaying();
-		}, 500);
-	});
-
-	onDestroy(() => {
-		clearInterval(intervalId);
-		intervalId = 0;
-	});
 </script>
 
 <footer class="footer">
@@ -45,7 +32,7 @@
 				play();
 			}}
 		>
-			{#if playing}
+			{#if $isPlayingStore}
 				<MdPause />
 			{:else}
 				<MdPlayArrow />

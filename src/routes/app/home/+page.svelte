@@ -5,12 +5,14 @@
 	import RectangularItem from '$lib/components/RectangularItem.svelte';
 
 	let recentlyPlayed: any[] = [];
-	let suggestions: any[] = [];
+	let quickPicks: any[] = [];
+	let albums: any[] = [];
 
 	const init = async () => {
 		try {
 			recentlyPlayed = await getRecentlyPlayed();
-			suggestions = await getSuggestions();
+			quickPicks = await getSuggestions();
+			albums = await getSuggestions('MusicAlbum');
 		} catch (e) {
 			toast.error((e as Error).message);
 		}
@@ -36,13 +38,32 @@
 	{/each}
 </div>
 
+<br />
+
 <h4 class="above-heading">SUGGESTIONS</h4>
 <h3 style="margin-top: 0;">Quick Picks</h3>
 <div class="row">
-	{#each suggestions as item (item.Id)}
+	{#each quickPicks as item (item.Id)}
 		<RectangularItem
 			itemId={item.Id}
 			albumId={item.AlbumId}
+			name={item.Name}
+			artist={item.AlbumArtist}
+			album={item.Album}
+			year={item.ProductionYear}
+		/>
+	{/each}
+</div>
+
+<br />
+
+<h4 class="above-heading">SUGGESTIONS</h4>
+<h3 style="margin-top: 0;">From your library</h3>
+<div class="row">
+	{#each albums as item (item.Id)}
+		<RectangularItem
+			itemId={item.Id}
+			albumId={item.Id}
 			name={item.Name}
 			artist={item.AlbumArtist}
 			album={item.Album}

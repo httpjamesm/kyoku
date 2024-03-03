@@ -2,18 +2,20 @@
 	import { queueStore } from '$lib/stores/queue';
 	import { getUrl } from '$lib/api/url';
 	import { onDestroy } from 'svelte';
-	import { playingStore } from '$lib/stores/playing';
+	import { playingStore, isPlayingStore } from '$lib/stores/playing';
 
 	let audioElement: HTMLAudioElement;
 
 	export function play() {
 		console.log(audioElement.currentTime);
 		audioElement.play();
+		isPlayingStore.set(true);
 	}
 
 	export function pause() {
 		audioElement.pause();
 		console.log(audioElement.currentTime);
+		isPlayingStore.set(false);
 	}
 
 	export function isPlaying() {

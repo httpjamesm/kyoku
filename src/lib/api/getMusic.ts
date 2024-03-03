@@ -27,14 +27,14 @@ export const getRecentlyPlayed = async () => {
 	return (res.data as any).Items;
 };
 
-export const getSuggestions = async () => {
+export const getSuggestions = async (type: string = 'Audio') => {
 	const client = await getClient();
 	const res = await client.get(`${getUrl(true)}/suggestions`, {
 		headers: await getHeaders(),
 
 		query: {
 			limit: '16',
-			type: 'Audio'
+			type
 		},
 		responseType: ResponseType.JSON
 	});
