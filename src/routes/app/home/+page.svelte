@@ -28,6 +28,8 @@
 			albumId={item.AlbumId}
 			name={item.Name}
 			artist={item.AlbumArtist}
+			album={item.Album}
+			year={item.ProductionYear}
 		/>
 	{/each}
 </div>

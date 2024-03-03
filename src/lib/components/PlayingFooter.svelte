@@ -7,6 +7,8 @@
 	import type { PlayerContextKey } from '$lib/context/player';
 	import { getContext } from 'svelte';
 	import { onMount, onDestroy } from 'svelte';
+	import { playingStore } from '$lib/stores/playing';
+	import { getUrl } from '$lib/api/url';
 
 	const { play, pause, isPlaying, setSrc } = getContext<PlayerContextKey>(playerContextKey);
 
@@ -51,6 +53,19 @@
 			<MdSkipNext />
 		</button>
 	</div>
+	<div class="current-track-container">
+		<img
+			src="{getUrl()}/Items/{$playingStore?.track
+				.albumId}/Images/Primary?fillHeight=334&fillWidth=334&quality=96"
+			alt="{$playingStore?.track.name} album art"
+		/>
+		<div class="details">
+			<p class="name">{$playingStore?.track.name}</p>
+			<p class="metadata">
+				{$playingStore?.track.artist} • {$playingStore?.track.album} • {$playingStore?.track.year}
+			</p>
+		</div>
+	</div>
 </footer>
 
 <style lang="scss">
@@ -88,6 +103,32 @@
 				color: white;
 				width: 54px;
 				height: 54px;
+			}
+		}
+
+		.current-track-container {
+			display: flex;
+			align-items: center;
+			gap: 1rem;
+
+			img {
+				width: 3rem;
+				height: 3rem;
+				border-radius: 5px;
+			}
+
+			.details {
+				p {
+					margin: 0;
+				}
+
+				.name {
+					font-weight: bold;
+				}
+
+				.metadata {
+					color: #7c7c7c;
+				}
 			}
 		}
 	}

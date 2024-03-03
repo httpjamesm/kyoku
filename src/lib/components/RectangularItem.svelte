@@ -3,18 +3,31 @@
 	import { playerContextKey } from '$lib/context/player';
 	import type { PlayerContextKey } from '$lib/context/player';
 	import { getContext } from 'svelte';
+	import { playingStore } from '$lib/stores/playing';
 
 	const { play, pause, setSrc } = getContext<PlayerContextKey>(playerContextKey);
 
 	export let itemId: string;
 	export let albumId: string;
+	export let album: string;
 	export let name: string;
 	export let artist: string;
+	export let year: number;
 
 	const startTrack = async () => {
 		const audioUrl = `${getUrl(false)}/Audio/${itemId}/universal?audioCodec=mp3&api_key=${window.localStorage.getItem('accessToken')}&Container=mp3,aac,m4a|aac,m4b|aac,flac,alac,m4a|alac,m4b|alac,wav&StartTimeTicks=0`;
 
 		setSrc(audioUrl);
+
+		playingStore.set({
+			track: {
+				albumId,
+				name,
+				album,
+				artist,
+				year
+			}
+		});
 	};
 </script>
 
