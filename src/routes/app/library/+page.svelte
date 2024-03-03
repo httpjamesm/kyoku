@@ -3,6 +3,7 @@
 	import toast from 'svelte-french-toast';
 	import RectangularItem from '$lib/components/RectangularItem.svelte';
 	import { onMount } from 'svelte';
+	import { Item } from '$lib/enums/item';
 
 	let items: any = [];
 
@@ -28,7 +29,7 @@
 			artist={item.AlbumArtist}
 			album={item.Album}
 			year={item.ProductionYear}
-			type="album"
+			type={Item.ALBUM}
 			favourite={item.UserData.IsFavorite}
 		/>
 	{/each}

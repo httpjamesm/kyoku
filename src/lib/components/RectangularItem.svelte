@@ -6,10 +6,10 @@
 	import MdPause from 'svelte-icons/md/MdPause.svelte';
 	import { fade } from 'svelte/transition';
 	import { showMenu } from 'tauri-plugin-context-menu';
-	import type { QueueStore } from '$lib/stores/queue';
 	import { markFavourite, unmarkFavourite } from '$lib/api/favourite';
 	import toast from 'svelte-french-toast';
 	import { getNewQueue, playNext } from '$lib/utils/queue';
+	import { Item } from '$lib/enums/item';
 
 	export let itemId: string;
 	export let albumId: string;
@@ -17,7 +17,7 @@
 	export let name: string;
 	export let artist: string;
 	export let year: number;
-	export let type: 'song' | 'album' = 'song';
+	export let type: Item = Item.SONG;
 	export let favourite = false;
 
 	let hovering = false;
@@ -99,7 +99,7 @@
 				}}
 			>
 				<div class="icon">
-					{#if type === 'song'}
+					{#if type === Item.SONG}
 						{#if $queueStore?.items.length > $queueStore?.currentIndex && currentInQueue}
 							{#if $isPlayingStore}
 								<img

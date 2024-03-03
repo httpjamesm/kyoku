@@ -5,12 +5,13 @@
 	import { queueStore } from '$lib/stores/queue';
 	import { getNewQueue } from '$lib/utils/queue';
 	import { playNext } from '$lib/utils/queue';
+	import type { Item } from '$lib/enums/item';
 
 	export let name: string;
 	export let albumId: string;
 	export let album: string;
 	export let itemId: string;
-	export let type: string;
+	export let type: Item;
 	export let artist: string;
 	export let year: number;
 
@@ -40,7 +41,7 @@
 				<div class="metadata">
 					<h1>{name}</h1>
 					<p>
-						{type[0].toUpperCase()}{type.slice(1)} • {artist} • {album} ({year})
+						{type} • {artist} • {album} ({year})
 					</p>
 				</div>
 				<div class="buttons">

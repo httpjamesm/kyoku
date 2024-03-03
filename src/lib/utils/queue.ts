@@ -1,15 +1,16 @@
 import { getAlbumTracks, getById, getInstantMixFromSong, getParentItems } from '$lib/api/getMusic';
+import { Item } from '$lib/enums/item';
 import type { QueueStore } from '$lib/stores/queue';
 import { queueStore } from '$lib/stores/queue';
 
-export const getNewQueue = async (type: string, id: string) => {
+export const getNewQueue = async (type: Item, id: string) => {
 	let items: any[] = [];
 
 	switch (type) {
-		case 'song':
+		case Item.SONG:
 			items = await getInstantMixFromSong('Items', id);
 			break;
-		case 'album':
+		case Item.ALBUM:
 			items = [...(await getParentItems(id)), ...(await getInstantMixFromSong('Albums', id))];
 			break;
 	}
@@ -30,16 +31,16 @@ export const getQueueItemFromJellyfinItem = (item: any) => {
 	};
 };
 
-export const getRelevantItems = async (type: string, id: string) => {
+export const getRelevantItems = async (type: Item, id: string) => {
 	let items: any[] = [];
 
 	switch (type) {
-		case 'song':
+		case Item.SONG:
 			const jellyfinItem = await getById(id);
 
 			items = [getQueueItemFromJellyfinItem(jellyfinItem)];
 			break;
-		case 'album':
+		case Item.ALBUM:
 			const jellyfinItems = await getAlbumTracks(id);
 			items = jellyfinItems.map((item: any) => getQueueItemFromJellyfinItem(item));
 			break;
@@ -48,7 +49,7 @@ export const getRelevantItems = async (type: string, id: string) => {
 	return items;
 };
 
-export const playNext = async (type: string, id: string) => {
+export const playNext = async (type: Item, id: string) => {
 	const relevantItems = await getRelevantItems(type, id);
 
 	queueStore.update((store: QueueStore) => ({

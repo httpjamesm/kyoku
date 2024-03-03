@@ -2,6 +2,8 @@
 	import TextInput from '$lib/components/input/TextInput.svelte';
 	import { searchLibrary } from '$lib/api/getMusic';
 	import TopResult from '$lib/components/TopResult.svelte';
+	import { getItemEnumFromJellyfinItem } from '$lib/enums/item';
+	import { Item } from '$lib/enums/item';
 
 	let searchTerm = '';
 
@@ -10,6 +12,7 @@
 	const onSearchHandler = async () => {
 		try {
 			const items = await searchLibrary(searchTerm);
+			console.log(items);
 			results = items;
 		} catch {}
 	};
@@ -32,12 +35,14 @@
 			<div class="results">
 				<TopResult
 					name={results[0].Name}
-					albumId={results[0].AlbumId}
+					albumId={results[0].Type === 'Audio' ? results[0].AlbumId : results[0].Id}
 					itemId={results[0].Id}
-					type={'song'}
+					type={getItemEnumFromJellyfinItem(results[0].Type)}
 					artist={results[0].AlbumArtist}
 					year={results[0].ProductionYear}
-					album={results[0].Album}
+					album={getItemEnumFromJellyfinItem(results[0].Type) === Item.ALBUM
+						? results[0].Name
+						: results[0].Album}
 				/>
 			</div>
 		{/if}
