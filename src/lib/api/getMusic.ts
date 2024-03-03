@@ -24,8 +24,6 @@ export const getRecentlyPlayed = async () => {
 		responseType: ResponseType.JSON
 	});
 
-	console.log(res.data);
-
 	return (res.data as any).Items;
 };
 
