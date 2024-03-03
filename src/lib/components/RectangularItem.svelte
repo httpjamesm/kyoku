@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { getUrl } from '$lib/api/url';
-	import { getStream } from '$lib/api/getMusic';
 	import { playerContextKey } from '$lib/context/player';
 	import type { PlayerContextKey } from '$lib/context/player';
 	import { getContext } from 'svelte';
@@ -13,7 +12,7 @@
 	export let artist: string;
 
 	const startTrack = async () => {
-		const audioUrl = `${getUrl(false)}/Audio/${itemId}/stream?audioCodec=mp3`;
+		const audioUrl = `${getUrl(false)}/Audio/${itemId}/universal?audioCodec=mp3&api_key=${window.localStorage.getItem('accessToken')}&Container=mp3,aac,m4a|aac,m4b|aac,flac,alac,m4a|alac,m4b|alac,wav&StartTimeTicks=0`;
 
 		setSrc(audioUrl);
 	};

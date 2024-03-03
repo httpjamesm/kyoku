@@ -2,6 +2,7 @@
 	import AudioPlayer from '$lib/components/AudioPlayer.svelte';
 	import { playerContextKey } from '$lib/context/player';
 	import { setContext } from 'svelte';
+	import PlayingFooter from '$lib/components/PlayingFooter.svelte';
 
 	let menuItems = ['Home', 'Library', 'Search'];
 
@@ -22,8 +23,12 @@
 		playerSrc = src;
 	}
 
+	function isPlaying() {
+		return audioPlayer.isPlaying();
+	}
+
 	// Set the context
-	setContext(playerContextKey, { play, pause, setSrc });
+	setContext(playerContextKey, { play, pause, setSrc, isPlaying });
 </script>
 
 <div class="blob-container">
@@ -45,6 +50,8 @@
 		</header>
 
 		<slot />
+
+		<PlayingFooter />
 	</div>
 </div>
 
@@ -64,6 +71,7 @@
 			padding: 1rem;
 			box-sizing: border-box;
 			color: white;
+			min-height: 100vh;
 
 			.header {
 				width: 100%;
