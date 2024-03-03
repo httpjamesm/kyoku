@@ -13,6 +13,7 @@
 	import type { QueueStore } from '$lib/stores/queue';
 	import { markFavourite, unmarkFavourite } from '$lib/api/favourite';
 	import toast from 'svelte-french-toast';
+	import { getAlbumTracks } from '$lib/api/getMusic';
 
 	const { play, pause, setSrc } = getContext<PlayerContextKey>(playerContextKey);
 
@@ -42,16 +43,45 @@
 				break;
 		}
 
-		const newQueue = items.map((item: any) => ({
+		const newQueue = items.map((item: any) => getQueueItemFromJellyfinItem(item));
+
+		return newQueue;
+	};
+
+	const getQueueItemFromJellyfinItem = (item: any) => {
+		return {
 			albumId: item.AlbumId,
 			name: item.Name,
 			artist: item.AlbumArtist,
 			album: item.Album,
 			year: item.ProductionYear,
 			id: item.Id
-		}));
+		};
+	};
 
-		return newQueue;
+	const getRelevantItems = async () => {
+		let items: any[] = [];
+
+		switch (type) {
+			case 'song':
+				items = [
+					{
+						albumId,
+						name,
+						artist,
+						album,
+						year,
+						id: itemId
+					}
+				];
+				break;
+			case 'album':
+				const jellyfinItems = await getAlbumTracks(itemId);
+				items = jellyfinItems.map((item: any) => getQueueItemFromJellyfinItem(item));
+				break;
+		}
+
+		return items;
 	};
 
 	const startTrack = async () => {
@@ -59,7 +89,6 @@
 			currentIndex: 0,
 			items: await getNewQueue()
 		});
-		play();
 	};
 
 	let currentInQueue = false;
@@ -68,28 +97,25 @@
 		currentInQueue = $queueStore.items[$queueStore.currentIndex].id === itemId;
 	}
 
+	const playNextHandler = async () => {
+		const relevantItems = await getRelevantItems();
+
+		queueStore.update((store: QueueStore) => ({
+			...store,
+			items: [
+				...store.items.slice(0, store.currentIndex + 1),
+				...relevantItems,
+				...store.items.slice(store.currentIndex + 1)
+			]
+		}));
+	};
+
 	const onContextMenu = () => {
 		showMenu({
 			items: [
 				{
 					label: 'Play next',
-					event: () => {
-						queueStore.update((store: QueueStore) => ({
-							...store,
-							items: [
-								...store.items.slice(0, store.currentIndex + 1),
-								{
-									albumId,
-									name,
-									artist,
-									album,
-									year,
-									id: itemId
-								},
-								...store.items.slice(store.currentIndex + 1)
-							]
-						}));
-					}
+					event: playNextHandler
 				},
 				{
 					is_separator: true

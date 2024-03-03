@@ -56,6 +56,20 @@ export const getLibrary = async (sort = 'DateCreated', order = 'Descending') => 
 	return (res.data as any).Items;
 };
 
+export const getAlbumTracks = async (albumId: string) => {
+	const client = await getClient();
+
+	const res = await client.get(`${getUrl(true)}/Items`, {
+		headers: await getHeaders(),
+		query: {
+			ParentId: albumId,
+			SortBy: 'ParentIndexNumber,IndexNumber,SortName'
+		}
+	});
+
+	return (res.data as any).Items;
+};
+
 export const getSuggestions = async (type: string = 'Audio') => {
 	const client = await getClient();
 	const res = await client.get(`${getUrl(true)}/suggestions`, {
