@@ -3,12 +3,11 @@
 	import { playerContextKey } from '$lib/context/player';
 	import { setContext } from 'svelte';
 	import PlayingFooter from '$lib/components/PlayingFooter.svelte';
+	import { page } from '$app/stores';
 
 	let menuItems = ['Home', 'Library', 'Search'];
 
 	let audioPlayer: any;
-
-	let playerSrc = '';
 
 	// Define the functions you want to pass down
 	function play() {
@@ -55,9 +54,8 @@
 			<nav>
 				{#each menuItems as menuItem}
 					<a
-						href="/app/{menuItem}"
-						class:selected={window.location.pathname === `/app/${menuItem.toLowerCase()}`}
-						>{menuItem}</a
+						href="/app/{menuItem.toLowerCase()}"
+						class:selected={$page.url.pathname === `/app/${menuItem.toLowerCase()}`}>{menuItem}</a
 					>
 				{/each}
 			</nav>
@@ -69,7 +67,7 @@
 	</div>
 </div>
 
-<AudioPlayer bind:this={audioPlayer} bind:src={playerSrc} />
+<AudioPlayer bind:this={audioPlayer} />
 
 <style lang="scss">
 	.content {
