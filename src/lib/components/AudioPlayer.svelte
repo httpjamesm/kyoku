@@ -5,6 +5,7 @@
 	import { playingStore, isPlayingStore } from '$lib/stores/playing';
 	import type { QueueStore } from '$lib/stores/queue';
 	import { playbackProgressStore } from '$lib/stores/playing';
+	import { getItemThumbnail } from '$lib/api/image';
 
 	let audioElement: HTMLAudioElement;
 	let previousQueueState = {
@@ -48,6 +49,18 @@
 
 	// Function to update the player with a new track
 	function updatePlayer(track: any) {
+		if ('mediaSession' in navigator) {
+			navigator.mediaSession.metadata = new MediaMetadata({
+				title: track.name,
+				artist: track.artist,
+				album: track.album,
+				artwork: [
+					{ src: getItemThumbnail(track.albumId, 96, 96), sizes: '96x96', type: 'image/jpeg' },
+					{ src: getItemThumbnail(track.albumId, 512, 512), sizes: '512x512', type: 'image/jpeg' }
+				]
+			});
+		}
+
 		audioElement.src = getSrcFromItemId(track.id);
 		audioElement.load();
 		playingStore.set({
