@@ -18,12 +18,22 @@
 			<h3>Queue</h3>
 			<div class="queue-container">
 				{#each $queueStore?.items as item, index}
-					<QueueComponent
-						albumId={item.albumId}
-						name={item.name}
-						artist={item.artist}
-						itemId={item.id}
-					/>
+					<button
+						class="queue-component-button"
+						on:click={() => {
+							queueStore.update((store) => ({
+								...store,
+								currentIndex: index
+							}));
+						}}
+					>
+						<QueueComponent
+							albumId={item.albumId}
+							name={item.name}
+							artist={item.artist}
+							itemId={item.id}
+						/>
+					</button>
 					{#if index !== $queueStore?.items.length}
 						<hr class="divider" />
 					{/if}
@@ -75,6 +85,17 @@
 			.queue-container {
 				overflow-y: auto;
 				height: 100%;
+
+				.queue-component-button {
+					all: unset;
+					cursor: pointer;
+
+					transition-duration: 100ms;
+
+					&:hover {
+						opacity: 0.5;
+					}
+				}
 
 				.divider {
 					border: 1px solid #1d1d1d;
