@@ -12,7 +12,7 @@
 
 <div class="queue-item-container">
 	<div class="thumbnail-container">
-		<img src={getItemThumbnail(albumId)} alt="thumbnail" />
+		<img src={getItemThumbnail(albumId, 128, 128)} alt="thumbnail" />
 		{#if $queueStore}
 			{#if $queueStore.items.length > $queueStore.currentIndex}
 				{#if $queueStore.items[$queueStore.currentIndex].id === itemId}

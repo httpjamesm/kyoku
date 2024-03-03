@@ -9,7 +9,10 @@
 <div class="now-playing-expanded-container" transition:fade={{ duration: 250 }}>
 	{#if $playingStore && $playingStore.track}
 		<div class="thumbnail-container">
-			<img src={getItemThumbnail($playingStore.track.albumId)} alt="current playing album art" />
+			<img
+				src={getItemThumbnail($playingStore.track.albumId, 1024, 1024)}
+				alt="current playing album art"
+			/>
 		</div>
 		<div class="track-menu-container">
 			<h3>Queue</h3>
