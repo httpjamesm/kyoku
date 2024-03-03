@@ -7,10 +7,17 @@ export const getHeaders = async () => {
 
 	try {
 		version = await getVersion();
-	} catch { }
+	} catch {}
+
+	let deviceId = window.localStorage.getItem('deviceId');
+
+	if (!deviceId) {
+		deviceId = generateRandomId(16);
+		window.localStorage.setItem('deviceId', deviceId);
+	}
 
 	let headers = {
-		'X-Emby-Authorization': `MediaBrowser Client="kyoku", Device="Computer", DeviceId="${generateRandomId(16)}", Version="${version}"${token ? `, Token="${token}"` : ''}`
+		'X-Emby-Authorization': `MediaBrowser Client="kyoku", Device="Computer", DeviceId="${deviceId}", Version="${version}"${token ? `, Token="${token}"` : ''}`
 	};
 
 	console.log(headers);
