@@ -101,6 +101,7 @@
 			<nav>
 				{#each menuItems.filter((item) => item.type === 'full') as menuItem}
 					<a
+						draggable={false}
 						href="/app/{menuItem.name.toLowerCase()}"
 						class:selected={$page.url.pathname === `/app/${menuItem.name.toLowerCase()}`}
 					>
@@ -112,6 +113,7 @@
 			<div class="icon-nav">
 				{#each menuItems.filter((item) => item.type === 'icon') as menuItem}
 					<a
+						draggable={false}
 						href="/app/{menuItem.name.toLowerCase()}"
 						class:selected={$page.url.pathname === `/app/${menuItem.name.toLowerCase()}`}
 					>
