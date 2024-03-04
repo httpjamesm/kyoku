@@ -3,6 +3,10 @@
 	import { onMount } from 'svelte';
 
 	onMount(() => {
+		if (window.localStorage.getItem('accessToken')) {
+			goto('/app/home');
+			return;
+		}
 		goto('/connect');
 	});
 </script>
