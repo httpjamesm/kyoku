@@ -15,16 +15,28 @@
 	import { getSetting } from '$lib/utils/settings';
 
 	let audioElement: HTMLAudioElement;
+	let nextAudioElement: HTMLAudioElement = new Audio();
 	let previousQueueState = {
 		items: [],
 		currentIndex: 0
 	} as QueueStore;
 
 	let currentQueueItem: QueueItem | null = null;
+	let nextQueueItem: QueueItem | null = null;
 
 	$: if ($queueStore) {
 		if ($queueStore.items.length > $queueStore.currentIndex) {
 			currentQueueItem = $queueStore.items[$queueStore.currentIndex];
+			// Preload the next track when the current track is set
+			preloadNextTrack();
+		}
+	}
+
+	function preloadNextTrack() {
+		const nextIndex = $queueStore.currentIndex + 1;
+		if (nextIndex < $queueStore.items.length) {
+			nextQueueItem = $queueStore.items[nextIndex];
+			updatePlayer(nextQueueItem, true); // Preload the next track
 		}
 	}
 
@@ -60,8 +72,7 @@
 
 	let audioType = '';
 
-	// Function to update the player with a new track
-	function updatePlayer(track: any) {
+	function updatePlayer(track: QueueItem, isNext = false) {
 		if ('mediaSession' in navigator) {
 			navigator.mediaSession.metadata = new MediaMetadata({
 				title: track.name,
@@ -76,12 +87,46 @@
 
 		audioType = `audio/${getSetting('playback.audioCodec')}`;
 
-		audioElement.src = getSrcFromItemId(track.id);
-		audioElement.load();
+		const targetElement = isNext ? nextAudioElement : audioElement;
 
-		audioElement.oncanplay = () => {
-			play();
-		};
+		targetElement.src = getSrcFromItemId(track.id);
+		targetElement.load(); // Preload the track
+
+		if (!isNext) {
+			// Only attach event listeners to the current track
+			targetElement.oncanplaythrough = () => {
+				// This event ensures the track is ready to play through to the end without stopping
+				if (!isNext) {
+					play(); // Automatically start playback for the current track
+				}
+			};
+
+			targetElement.ontimeupdate = () => {
+				const currentTime = targetElement.currentTime;
+				if (currentQueueItem) {
+					reportPlaybackProgress(currentTime, currentQueueItem.id);
+				}
+				const duration = targetElement.duration;
+				const progress = (currentTime / duration) * 100;
+				playbackProgressStore.set(progress);
+			};
+
+			targetElement.onended = () => {
+				if (currentQueueItem) {
+					reportFinishedPlayback(currentQueueItem.id);
+				}
+
+				// Switch the audio elements and their corresponding queue items
+				[audioElement, nextAudioElement] = [nextAudioElement, audioElement];
+				[currentQueueItem, nextQueueItem] = [nextQueueItem, null];
+
+				// Play the preloaded track immediately
+				play();
+
+				// Preload the next track
+				preloadNextTrack();
+			};
+		}
 	}
 
 	function isRelevantChange(prevState: QueueStore, currentState: QueueStore) {
@@ -130,12 +175,18 @@
 			if (currentQueueItem) {
 				reportFinishedPlayback(currentQueueItem.id);
 			}
-			skip();
-			// Explicitly call updatePlayer for the next track after skip
-			const { items, currentIndex } = $queueStore;
-			if (items[currentIndex]) {
-				updatePlayer(items[currentIndex]);
-			}
+
+			queueStore.update((store) => {
+				const nextIndex = Math.min(store.currentIndex + 1, store.items.length - 1);
+				return { ...store, currentIndex: nextIndex };
+			});
+
+			[audioElement, nextAudioElement] = [nextAudioElement, audioElement];
+			[nextQueueItem, currentQueueItem] = [null, nextQueueItem]; // Correctly update queue items
+
+			play();
+
+			preloadNextTrack();
 		};
 
 		audioElement.ontimeupdate = () => {
@@ -175,4 +226,8 @@
 >
 	<source type={audioType} />
 	Your browser does not support the audio element.
+</audio>
+<audio bind:this={nextAudioElement} style="display: none;">
+	<!-- Preload element -->
+	<source type={audioType} />
 </audio>
