@@ -22,6 +22,7 @@
 	import { onDestroy } from 'svelte';
 	import type { QueueItem } from '$lib/stores/queue';
 	import { slide } from 'svelte/transition';
+	import IconButton from './buttons/IconButton.svelte';
 
 	let showExpanded = false;
 
@@ -40,8 +41,11 @@
 		checkFavourite();
 	}
 
+	let favouriteLoading = false;
+
 	const onToggleFavouriteHandler = async () => {
 		if (!currentQueueItem) return;
+		favouriteLoading = true;
 		try {
 			if (favourite) {
 				await unmarkFavourite(currentQueueItem.id);
@@ -51,6 +55,8 @@
 			await checkFavourite();
 		} catch (e) {
 			toast.error((e as Error).message);
+		} finally {
+			favouriteLoading = false;
 		}
 	};
 
@@ -84,10 +90,10 @@
 >
 	<TrackProgressBar progress={$playbackProgressStore} />
 	<div class="buttons">
-		<button on:click={prev}>
+		<IconButton on:click={prev}>
 			<MdSkipPrevious />
-		</button>
-		<button
+		</IconButton>
+		<IconButton
 			on:click={() => {
 				if ($isPlayingStore) {
 					pause();
@@ -102,10 +108,10 @@
 			{:else}
 				<MdPlayArrow />
 			{/if}
-		</button>
-		<button on:click={skip}>
+		</IconButton>
+		<IconButton on:click={skip}>
 			<MdSkipNext />
-		</button>
+		</IconButton>
 	</div>
 	<div class="current-track-container">
 		{#if currentQueueItem}
@@ -122,18 +128,18 @@
 				</p>
 			</div>
 			<div class="buttons">
-				<button on:click={onToggleFavouriteHandler}>
+				<IconButton on:click={onToggleFavouriteHandler} loading={favouriteLoading}>
 					{#if favourite}
 						<MdFavorite />
 					{:else}
 						<MdFavoriteBorder />
 					{/if}
-				</button>
+				</IconButton>
 			</div>
 		{/if}
 	</div>
 	<div class="buttons">
-		<button
+		<IconButton
 			on:click={() => {
 				showExpanded = !showExpanded;
 				window.addEventListener('keydown', checkShortcut);
@@ -144,7 +150,7 @@
 			{:else}
 				<MdArrowDropDown />
 			{/if}
-		</button>
+		</IconButton>
 	</div>
 </footer>
 
