@@ -15,7 +15,9 @@ export const getNewQueue = async (type: Item, id: string) => {
 			break;
 	}
 
-	const newQueue = items.map((item: any) => getQueueItemFromJellyfinItem(item));
+	const uniqueItems = removeDuplicatesFromJellyfinItems(items);
+
+	const newQueue = uniqueItems.map((item: any) => getQueueItemFromJellyfinItem(item));
 
 	return newQueue;
 };
@@ -46,7 +48,9 @@ export const getRelevantItems = async (type: Item, id: string) => {
 			break;
 	}
 
-	return items;
+	const uniqueItems = removeDuplicatesFromJellyfinItems(items);
+
+	return uniqueItems;
 };
 
 export const playNext = async (type: Item, id: string) => {
@@ -80,4 +84,18 @@ export const playNow = async (type: Item, id: string) => {
 		currentIndex: 0,
 		items: relevantItems
 	});
+};
+
+const removeDuplicatesFromJellyfinItems = (items: any[]) => {
+	// Remove duplicates by using an object to track seen ids
+	const seenIds: { [key: string]: boolean } = {};
+	const uniqueItems = items.filter((item: any) => {
+		if (!seenIds[item.Id]) {
+			seenIds[item.Id] = true;
+			return true;
+		}
+		return false;
+	});
+
+	return uniqueItems;
 };
