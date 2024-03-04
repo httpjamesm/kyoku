@@ -34,6 +34,11 @@
 		cursor: pointer;
 
 		width: 10rem;
+		transition-duration: 250ms;
+
+		&:hover {
+			opacity: 0.7;
+		}
 
 		.image-container {
 			img {
