@@ -3,16 +3,13 @@
 	import Setting from '$lib/components/settings/Setting.svelte';
 	import Select from '$lib/components/input/Select.svelte';
 	import { getSetting, setSetting } from '$lib/utils/settings';
-	import Toggle from '$lib/components/input/Toggle.svelte';
 
 	let audioQuality = getSetting('playback.audioQuality');
 	let audioCodec = getSetting('playback.audioCodec');
-	let gaplessPlayback = getSetting('playback.gapless') === 'true';
 
 	$: {
 		setSetting('playback.audioQuality', audioQuality);
 		setSetting('playback.audioCodec', audioCodec);
-		setSetting('playback.gapless', gaplessPlayback.toString());
 	}
 </script>
 
@@ -52,8 +49,5 @@
 				{ value: 'flac', label: 'FLAC' }
 			]}
 		/>
-	</Setting>
-	<Setting name="Gapless Playback">
-		<Toggle id="gapless-toggle" bind:checked={gaplessPlayback} />
 	</Setting>
 </SettingsSection>
