@@ -28,7 +28,6 @@
 	onMount(() => {
 		searchInput.focus();
 		searchTerm = new URLSearchParams(window.location.search).get('term') || '';
-		console.log(searchTerm);
 	});
 </script>
 
@@ -75,6 +74,8 @@
 							on:click={() => {
 								playNow(getItemEnumFromJellyfinItem(item.Type), item.Id);
 							}}
+							ticks={item.RunTimeTicks}
+							isInQueue={false}
 						/>
 						{#if index !== songResults.length}
 							<Divider />

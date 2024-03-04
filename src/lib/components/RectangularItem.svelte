@@ -15,6 +15,7 @@
 	export let itemId: string;
 	export let albumId: string;
 	export let album: string;
+	export let artistId: string;
 	export let name: string;
 	export let artist: string;
 	export let year: number;
@@ -54,6 +55,12 @@
 					label: 'Go to album',
 					event: () => {
 						goto(`/app/album?id=${albumId}`);
+					}
+				},
+				{
+					label: 'Go to artist',
+					event: () => {
+						goto(`/app/artist?id=${artistId}`);
 					}
 				},
 				{

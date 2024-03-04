@@ -36,6 +36,7 @@
 			album={item.Album}
 			year={item.ProductionYear}
 			favourite={item.UserData.IsFavorite}
+			artistId={item.AlbumArtists[0].Id}
 		/>
 	{/each}
 </div>
@@ -53,6 +54,7 @@
 			artist={item.AlbumArtist}
 			album={item.Album}
 			year={item.ProductionYear}
+			artistId={item.AlbumArtists[0].Id}
 		/>
 	{/each}
 </div>
@@ -71,6 +73,7 @@
 			album={item.Album}
 			year={item.ProductionYear}
 			type={Item.ALBUM}
+			artistId={item.ArtistId}
 		/>
 	{/each}
 </div>

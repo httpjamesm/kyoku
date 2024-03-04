@@ -128,3 +128,41 @@ export const getInstantMixFromSong = async (type: string = 'Items', itemId: stri
 
 	return items;
 };
+
+export const getArtistTopTracks = async (artistId: string) => {
+	const client = await getClient();
+
+	const res = await client.get(`${getUrl(true)}/Items`, {
+		query: {
+			ParentId: artistId,
+			SortBy: 'PlayCount',
+			Recursive: 'true',
+			IncludeItemTypes: 'Audio',
+			SortOrder: 'Descending'
+		},
+		headers: await getHeaders()
+	});
+
+	const items = (res.data as any).Items;
+
+	return items;
+};
+
+export const getArtistRecentAlbums = async (artistId: string) => {
+	const client = await getClient();
+
+	const res = await client.get(`${getUrl(true)}/Items`, {
+		query: {
+			ParentId: artistId,
+			SortBy: 'PremiereDate',
+			Recursive: 'true',
+			IncludeItemTypes: 'MusicAlbum',
+			SortOrder: 'Descending'
+		},
+		headers: await getHeaders()
+	});
+
+	const items = (res.data as any).Items;
+
+	return items;
+};

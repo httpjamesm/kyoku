@@ -6,10 +6,11 @@
 	export let artist: string;
 	export let ticks = 0;
 	export let itemId: string;
+	export let isInQueue: boolean;
 </script>
 
 <button class="queue-component-button" on:click>
-	<QueueComponent {albumId} {name} {artist} {itemId} {ticks} />
+	<QueueComponent {albumId} {name} {artist} {itemId} {ticks} {isInQueue} />
 </button>
 
 <style lang="scss">

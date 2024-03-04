@@ -31,6 +31,7 @@
 			year={item.ProductionYear}
 			type={Item.ALBUM}
 			favourite={item.UserData.IsFavorite}
+			artistId={item.AlbumArtists[0].Id}
 		/>
 	{/each}
 </div>

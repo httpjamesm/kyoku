@@ -12,6 +12,7 @@
 	export let artist: string;
 	export let ticks = 0;
 	export let itemId: string;
+	export let isInQueue = true;
 </script>
 
 <div class="queue-item-container">
@@ -53,16 +54,18 @@
 			<MdAllInclusive />
 		</button>
 
-		<button
-			on:click|stopPropagation={() => {
-				queueStore.update((store) => ({
-					...store,
-					items: store.items.filter((item) => item.id !== itemId)
-				}));
-			}}
-		>
-			<MdRemove />
-		</button>
+		{#if isInQueue}
+			<button
+				on:click|stopPropagation={() => {
+					queueStore.update((store) => ({
+						...store,
+						items: store.items.filter((item) => item.id !== itemId)
+					}));
+				}}
+			>
+				<MdRemove />
+			</button>
+		{/if}
 	</div>
 </div>
 
