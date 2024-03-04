@@ -60,7 +60,6 @@
 					album={getItemEnumFromJellyfinItem(results[0].Type) === Item.ALBUM
 						? results[0].Name
 						: results[0].Album}
-					hasImage={results[0].ImageBlurHashes.length > 0}
 				/>
 				{#if results.length > 1}
 					<br />

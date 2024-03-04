@@ -17,21 +17,7 @@
 	export let year: number;
 	export let hasImage: boolean;
 
-	let thumbnail = '';
-
-	$: if (!hasImage) {
-		switch (type) {
-			case Item.SONG:
-			case Item.ALBUM:
-				thumbnail = '/icons/unknown-track.webp';
-				break;
-			case Item.ARTIST:
-				thumbnail = '/icons/unknown-artist.webp';
-				break;
-		}
-	} else {
-		thumbnail = getItemThumbnail(albumId, 1024, 512);
-	}
+	let thumbnail = getItemThumbnail(albumId, 1024, 512);
 
 	const onPlayHandler = async () => {
 		queueStore.set({
@@ -61,7 +47,22 @@
 		<div class="result-info-container">
 			<div class="art-container">
 				<a class="link" {href}>
-					<img src={thumbnail} alt="album art" class="album-art" />
+					<img
+						src={thumbnail}
+						alt="album art"
+						class="album-art"
+						on:error={() => {
+							switch (type) {
+								case Item.SONG:
+								case Item.ALBUM:
+									thumbnail = '/icons/unknown-track.webp';
+									break;
+								case Item.ARTIST:
+									thumbnail = '/icons/unknown-artist.webp';
+									break;
+							}
+						}}
+					/>
 				</a>
 			</div>
 			<div class="details">
