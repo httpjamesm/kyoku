@@ -23,6 +23,7 @@
 	import type { QueueItem } from '$lib/stores/queue';
 	import { slide } from 'svelte/transition';
 	import IconButton from './buttons/IconButton.svelte';
+	import { getItemThumbnail } from '$lib/api/image';
 
 	let showExpanded = false;
 
@@ -71,10 +72,16 @@
 	onDestroy(() => {
 		window.removeEventListener('keydown', checkShortcut);
 	});
+
+	let thumbnail = '';
+
+	$: if (currentQueueItem) {
+		thumbnail = getItemThumbnail(currentQueueItem.id, 96, 96);
+	}
 </script>
 
 {#if showExpanded}
-	<NowPlayingExpanded />
+	<NowPlayingExpanded {currentQueueItem} />
 {/if}
 
 <footer
@@ -116,7 +123,10 @@
 	<div class="current-track-container">
 		{#if currentQueueItem}
 			<img
-				src="{getUrl()}/Items/{currentQueueItem.albumId}/Images/Primary?fillHeight=334&fillWidth=334&quality=96"
+				src={thumbnail}
+				on:error={() => {
+					thumbnail = '/icons/unknown-track.webp';
+				}}
 				alt="{currentQueueItem.name} album art"
 			/>
 			<div class="details">
