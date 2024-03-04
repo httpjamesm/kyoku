@@ -21,6 +21,7 @@
 	import toast from 'svelte-french-toast';
 	import { onDestroy } from 'svelte';
 	import type { QueueItem } from '$lib/stores/queue';
+	import { slide } from 'svelte/transition';
 
 	let showExpanded = false;
 
@@ -71,6 +72,7 @@
 {/if}
 
 <footer
+	transition:slide
 	class="footer"
 	role="button"
 	tabindex="0"

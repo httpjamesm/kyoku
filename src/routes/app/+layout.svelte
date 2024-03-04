@@ -12,6 +12,7 @@
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 	import { primaryOrBackupServerConnectivity } from '$lib/api/url';
 	import { navigating } from '$app/stores';
+	import { queueStore } from '$lib/stores/queue';
 
 	let menuItems = [
 		{
@@ -130,7 +131,9 @@
 
 		<slot />
 
-		<PlayingFooter />
+		{#if $queueStore?.items.length > 0}
+			<PlayingFooter />
+		{/if}
 	</div>
 </div>
 
