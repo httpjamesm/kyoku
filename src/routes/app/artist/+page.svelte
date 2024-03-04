@@ -42,6 +42,8 @@
 			items: topSongItems.map((item) => getQueueItemFromJellyfinItem(item))
 		});
 	};
+
+	let artistImage = getItemThumbnail(id, 512, 512);
 </script>
 
 {#if id}
@@ -49,7 +51,14 @@
 		<div class="header" style="background-image: url('{getItemThumbnail(id, 2048, 2048)}')">
 			<div class="overlay" />
 			<div class="artist-info">
-				<img src={getItemThumbnail(id, 512, 512)} class="artist-image" alt="artist" />
+				<img
+					src={artistImage}
+					class="artist-image"
+					alt="artist"
+					on:error={() => {
+						artistImage = '/icons/unknown-artist.webp';
+					}}
+				/>
 				<div class="metadata">
 					<h1>{name}</h1>
 					<h2>{genres.join(', ')}</h2>
@@ -123,6 +132,7 @@
 			border-top-right-radius: 10px;
 			border-top-left-radius: 10px;
 			background-position: center;
+			background-color: #296383;
 
 			.overlay {
 				position: absolute;
