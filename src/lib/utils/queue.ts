@@ -112,3 +112,10 @@ const removeDuplicatesFromJellyfinItems = (items: any[]) => {
 
 	return uniqueItems;
 };
+
+export const deleteFromQueueById = (deleteItemId: string) => {
+	queueStore.update((store) => ({
+		...store,
+		items: store.items.filter((item) => item.id !== deleteItemId)
+	}));
+};

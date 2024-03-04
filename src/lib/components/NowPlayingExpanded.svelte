@@ -40,7 +40,7 @@
 					queueStore.update((store) => ({ ...store, items: e.detail.items }));
 				}}
 			>
-				{#each $queueStore.items as item, index (index)}
+				{#each $queueStore.items as item, index (item.id)}
 					<div animate:flip={{ duration: 300 }}>
 						<QueueComponentButton
 							on:click={() => {

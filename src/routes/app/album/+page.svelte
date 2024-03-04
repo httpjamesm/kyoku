@@ -12,6 +12,7 @@
 	import MdPlayArrow from 'svelte-icons/md/MdPlayArrow.svelte';
 	import MdQueue from 'svelte-icons/md/MdQueue.svelte';
 	import { playNext } from '$lib/utils/queue';
+	import { deleteFromQueueById } from '$lib/utils/queue';
 
 	let name = '';
 	let artists: string[] = [];
@@ -97,6 +98,9 @@
 						const remainingSongsQueueItems = remainingSongs.map((song) =>
 							getQueueItemFromJellyfinItem(song)
 						);
+						for (const song of remainingSongsQueueItems) {
+							deleteFromQueueById(song.id);
+						}
 						addItemsNextInQueue(remainingSongsQueueItems);
 					}}
 				/>

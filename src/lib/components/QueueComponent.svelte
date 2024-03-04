@@ -7,6 +7,7 @@
 	import { playNow } from '$lib/utils/queue';
 	import { Item } from '$lib/enums/item';
 	import IconButton from './buttons/IconButton.svelte';
+	import { deleteFromQueueById } from '$lib/utils/queue';
 
 	let playNowLoading = false;
 
@@ -75,10 +76,7 @@
 				on:click={(e) => {
 					e.stopPropagation();
 
-					queueStore.update((store) => ({
-						...store,
-						items: store.items.filter((item) => item.id !== itemId)
-					}));
+					deleteFromQueueById(itemId);
 				}}
 			>
 				<MdRemove />
