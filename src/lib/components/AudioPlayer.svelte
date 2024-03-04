@@ -12,6 +12,7 @@
 		reportPlaybackProgress
 	} from '$lib/api/playback';
 	import type { QueueItem } from '$lib/stores/queue';
+	import { getSetting } from '$lib/utils/settings';
 
 	let audioElement: HTMLAudioElement;
 	let previousQueueState = {
@@ -57,6 +58,8 @@
 		audioElement.currentTime = audioElement.duration * percentage;
 	}
 
+	let audioType = '';
+
 	// Function to update the player with a new track
 	function updatePlayer(track: any) {
 		if ('mediaSession' in navigator) {
@@ -70,6 +73,8 @@
 				]
 			});
 		}
+
+		audioType = `audio/${getSetting('playback.audioCodec')}`;
 
 		audioElement.src = getSrcFromItemId(track.id);
 		audioElement.load();
@@ -110,7 +115,14 @@
 	});
 
 	const getSrcFromItemId = (id: string) => {
-		return `${getUrl(false)}/Audio/${id}/universal?audioCodec=aac&api_key=${window.localStorage.getItem('accessToken')}&Container=mp3,aac,m4a|aac,m4b|aac,flac,alac,m4a|alac,m4b|alac,wav&StartTimeTicks=0`;
+		let url = `${getUrl(false)}/Audio/${id}/universal?audioCodec=${getSetting('playback.audioCodec')}&api_key=${window.localStorage.getItem('accessToken')}&Container=mp3,aac,m4a|aac,m4b|aac,flac,alac,m4a|alac,m4b|alac,wav&StartTimeTicks=0`;
+
+		const quality = getSetting('playback.audioQuality');
+		if (quality !== 'auto') {
+			url += `&audioBitRate=${quality}`;
+		}
+
+		return url;
 	};
 
 	$: if (audioElement) {
@@ -161,6 +173,6 @@
 		}
 	}}
 >
-	<source type="audio/aac" />
+	<source type={audioType} />
 	Your browser does not support the audio element.
 </audio>
