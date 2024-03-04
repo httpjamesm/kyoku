@@ -48,7 +48,7 @@
 				</div>
 				<div class="buttons">
 					<InteractionButton on:click={onPlayHandler} icon={MdPlayArrow}>Play</InteractionButton>
-					<InteractionButton on:click={onPlayNextHandler} icon={MdQueue}
+					<InteractionButton type="secondary" on:click={onPlayNextHandler} icon={MdQueue}
 						>Play Next</InteractionButton
 					>
 				</div>
