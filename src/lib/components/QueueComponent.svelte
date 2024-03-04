@@ -16,12 +16,20 @@
 	export let ticks = 0;
 	export let itemId: string;
 	export let isInQueue = true;
+
+	let thumbnail = getItemThumbnail(albumId, 128, 128);
 </script>
 
 <div class="queue-item-container">
 	<div class="item-data">
 		<div class="thumbnail-container">
-			<img src={getItemThumbnail(albumId, 128, 128)} alt="thumbnail" />
+			<img
+				src={thumbnail}
+				alt="thumbnail"
+				on:error={() => {
+					thumbnail = '/icons/unknown-track.webp';
+				}}
+			/>
 			{#if $queueStore}
 				{#if $queueStore.items.length > $queueStore.currentIndex}
 					{#if $queueStore.items[$queueStore.currentIndex].id === itemId}
