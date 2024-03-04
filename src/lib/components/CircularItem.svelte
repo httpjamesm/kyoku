@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getItemThumbnail } from '$lib/api/image';
+	import { goto } from '$app/navigation';
 
 	export let artistId: string;
 	export let artist: string;
@@ -7,7 +8,12 @@
 	let thumbnail = getItemThumbnail(artistId);
 </script>
 
-<button class="item-container">
+<button
+	class="item-container"
+	on:click={() => {
+		goto(`/app/artist?id=${artistId}`);
+	}}
+>
 	<div class="image-container">
 		<img
 			src={thumbnail}
