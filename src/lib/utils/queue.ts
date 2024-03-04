@@ -33,12 +33,12 @@ export const getNewQueue = async (type: Item, id: string) => {
 
 export const getQueueItemFromJellyfinItem = (item: any) => {
 	return {
+		id: item.Id,
 		albumId: item.AlbumId,
 		name: item.Name,
 		artist: item.AlbumArtist,
 		album: item.Album,
 		year: item.ProductionYear,
-		id: item.Id,
 		ticks: item.RunTimeTicks,
 		artistId: item.ArtistItems[0].Id
 	};
@@ -98,9 +98,11 @@ export const playNow = async (type: Item, id: string) => {
 };
 
 const removeDuplicatesFromJellyfinItems = (items: any[]) => {
-	// Remove duplicates by using an object to track seen ids
 	const seenIds: { [key: string]: boolean } = {};
 	const uniqueItems = items.filter((item: any) => {
+		if (!item.Id) {
+			return false;
+		}
 		if (!seenIds[item.Id]) {
 			seenIds[item.Id] = true;
 			return true;

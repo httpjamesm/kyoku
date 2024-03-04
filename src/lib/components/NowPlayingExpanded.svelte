@@ -1,19 +1,30 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { getItemThumbnail } from '$lib/api/image';
-
 	import { queueStore } from '$lib/stores/queue';
 	import Divider from './Divider.svelte';
 	import QueueComponentButton from './QueueComponentButton.svelte';
 	import { dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
+	import type { QueueItem } from '$lib/stores/queue';
+
+	export let currentQueueItem: QueueItem | null = null;
+
+	let thumbnail = '';
+
+	$: if (currentQueueItem) {
+		thumbnail = getItemThumbnail(currentQueueItem.albumId, 1024, 1024);
+	}
 </script>
 
 <div class="now-playing-expanded-container" transition:fade={{ duration: 250 }}>
-	{#if $queueStore && $queueStore.items.length > $queueStore.currentIndex}
+	{#if currentQueueItem}
 		<div class="thumbnail-container">
 			<img
-				src={getItemThumbnail($queueStore.items[$queueStore.currentIndex].albumId, 1024, 1024)}
+				src={thumbnail}
+				on:error={() => {
+					thumbnail = '/icons/unknown-track.webp';
+				}}
 				alt="current playing album art"
 			/>
 		</div>
@@ -29,7 +40,7 @@
 					queueStore.update((store) => ({ ...store, items: e.detail.items }));
 				}}
 			>
-				{#each $queueStore.items as item, index (item.id)}
+				{#each $queueStore.items as item, index (index)}
 					<div animate:flip={{ duration: 300 }}>
 						<QueueComponentButton
 							on:click={() => {
