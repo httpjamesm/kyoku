@@ -10,6 +10,7 @@
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
+	import { primaryOrBackupServerConnectivity } from '$lib/api/url';
 
 	let menuItems = [
 		{
@@ -78,10 +79,12 @@
 
 	onMount(() => {
 		window.addEventListener('keydown', checkShortcut);
+		window.addEventListener('focus', primaryOrBackupServerConnectivity);
 	});
 
 	onDestroy(() => {
 		window.removeEventListener('keydown', checkShortcut);
+		window.removeEventListener('focus', primaryOrBackupServerConnectivity);
 	});
 
 	// Set the context

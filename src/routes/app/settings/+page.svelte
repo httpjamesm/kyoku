@@ -12,17 +12,22 @@
 	let audioCodec = getSetting('playback.audioCodec');
 
 	let serverUrl = getSetting('serverUrl');
+	let backupServerUrl = getSetting('backupServerUrl');
 
 	$: {
 		setSetting('playback.audioQuality', audioQuality);
 		setSetting('playback.audioCodec', audioCodec);
 		setSetting('serverUrl', serverUrl);
+		setSetting('backupServerUrl', backupServerUrl);
 	}
 </script>
 
 <SettingsSection name="Connectivity">
 	<Setting name="Server URL">
 		<TextInput id="server-url-input" bind:value={serverUrl} />
+	</Setting>
+	<Setting name="Backup Server URL">
+		<TextInput id="backup-server-url-input" bind:value={backupServerUrl} />
 	</Setting>
 </SettingsSection>
 
