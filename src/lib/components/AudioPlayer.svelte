@@ -2,7 +2,7 @@
 	import { queueStore } from '$lib/stores/queue';
 	import { getUrl } from '$lib/api/url';
 	import { onDestroy } from 'svelte';
-	import { playingStore, isPlayingStore } from '$lib/stores/playing';
+	import { isPlayingStore } from '$lib/stores/playing';
 	import type { QueueStore } from '$lib/stores/queue';
 	import { playbackProgressStore } from '$lib/stores/playing';
 	import { getItemThumbnail } from '$lib/api/image';
@@ -73,15 +73,7 @@
 
 		audioElement.src = getSrcFromItemId(track.id);
 		audioElement.load();
-		playingStore.set({
-			track: {
-				albumId: track.albumId,
-				name: track.name,
-				album: track.album,
-				artist: track.artist,
-				year: track.year
-			}
-		});
+
 		audioElement.oncanplay = () => {
 			play();
 		};

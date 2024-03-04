@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { getItemThumbnail } from '$lib/api/image';
-	import { playingStore } from '$lib/stores/playing';
+
 	import { queueStore } from '$lib/stores/queue';
 	import Divider from './Divider.svelte';
 	import QueueComponentButton from './QueueComponentButton.svelte';
@@ -10,10 +10,10 @@
 </script>
 
 <div class="now-playing-expanded-container" transition:fade={{ duration: 250 }}>
-	{#if $playingStore && $playingStore.track}
+	{#if $queueStore && $queueStore.currentIndex > $queueStore.items.length}
 		<div class="thumbnail-container">
 			<img
-				src={getItemThumbnail($playingStore.track.albumId, 1024, 1024)}
+				src={getItemThumbnail($queueStore.items[$queueStore.currentIndex].albumId, 1024, 1024)}
 				alt="current playing album art"
 			/>
 		</div>

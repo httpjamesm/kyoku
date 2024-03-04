@@ -8,7 +8,6 @@
 	import { playerContextKey } from '$lib/context/player';
 	import type { PlayerContextKey } from '$lib/context/player';
 	import { getContext } from 'svelte';
-	import { playingStore } from '$lib/stores/playing';
 	import { getUrl } from '$lib/api/url';
 	import { isPlayingStore } from '$lib/stores/playing';
 	import { playbackProgressStore } from '$lib/stores/playing';
@@ -21,29 +20,32 @@
 	import { markFavourite, unmarkFavourite } from '$lib/api/favourite';
 	import toast from 'svelte-french-toast';
 	import { onDestroy } from 'svelte';
+	import type { QueueItem } from '$lib/stores/queue';
 
 	let showExpanded = false;
 
 	let favourite = false;
 
-	let currentTrackId = '';
+	let currentQueueItem: QueueItem | null = null;
 
 	const checkFavourite = async () => {
-		const item = await getById(currentTrackId);
+		if (!currentQueueItem) return;
+		const item = await getById(currentQueueItem.id);
 		favourite = item.UserData.IsFavorite;
 	};
 
 	$: if ($queueStore && $queueStore.items.length > $queueStore.currentIndex) {
-		currentTrackId = $queueStore.items[$queueStore.currentIndex].id;
+		currentQueueItem = $queueStore.items[$queueStore.currentIndex];
 		checkFavourite();
 	}
 
 	const onToggleFavouriteHandler = async () => {
+		if (!currentQueueItem) return;
 		try {
 			if (favourite) {
-				await unmarkFavourite(currentTrackId);
+				await unmarkFavourite(currentQueueItem.id);
 			} else {
-				await markFavourite(currentTrackId);
+				await markFavourite(currentQueueItem.id);
 			}
 			await checkFavourite();
 		} catch (e) {
@@ -104,18 +106,17 @@
 		</button>
 	</div>
 	<div class="current-track-container">
-		{#if $playingStore}
+		{#if currentQueueItem}
 			<img
-				src="{getUrl()}/Items/{$playingStore?.track
-					.albumId}/Images/Primary?fillHeight=334&fillWidth=334&quality=96"
-				alt="{$playingStore?.track.name} album art"
+				src="{getUrl()}/Items/{currentQueueItem.albumId}/Images/Primary?fillHeight=334&fillWidth=334&quality=96"
+				alt="{currentQueueItem.name} album art"
 			/>
 			<div class="details">
-				<p class="name">{$playingStore?.track.name}</p>
+				<p class="name">{currentQueueItem.name}</p>
 				<p class="metadata">
-					{$playingStore?.track.artist} •
-					<a href="/app/album?id={$playingStore?.track.albumId}">{$playingStore?.track.album}</a>
-					• {$playingStore?.track.year}
+					{currentQueueItem.artist} •
+					<a href="/app/album?id={currentQueueItem.albumId}">{currentQueueItem.album}</a>
+					• {currentQueueItem.year}
 				</p>
 			</div>
 			<div class="buttons">
