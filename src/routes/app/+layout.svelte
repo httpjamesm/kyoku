@@ -11,6 +11,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 	import { primaryOrBackupServerConnectivity } from '$lib/api/url';
+	import { navigating } from '$app/stores';
 
 	let menuItems = [
 		{
@@ -76,6 +77,10 @@
 				return;
 		}
 	};
+
+	$: if (navigating) {
+		primaryOrBackupServerConnectivity();
+	}
 
 	onMount(() => {
 		window.addEventListener('keydown', checkShortcut);

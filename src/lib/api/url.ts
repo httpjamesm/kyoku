@@ -35,7 +35,6 @@ const checkServerConnection = async (primary: boolean) => {
 export const primaryOrBackupServerConnectivity = async () => {
 	if (!window.localStorage.getItem('backupServerUrl')) return;
 
-	console.log('checking connectivity');
 	try {
 		await checkServerConnection(true);
 	} catch {
