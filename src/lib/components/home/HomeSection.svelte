@@ -1,9 +1,11 @@
 <script lang="ts">
 	import MdRefresh from 'svelte-icons/md/MdRefresh.svelte';
+	import IconButton from '../buttons/IconButton.svelte';
 
 	export let name: string;
 	export let subtitle = '';
-	export let refresh = () => {};
+	export let refresh: () => Promise<void>;
+	let loading = false;
 </script>
 
 <div class="header">
@@ -14,9 +16,17 @@
 		<h3 class:noMarginTop={subtitle} class="name">{name}</h3>
 	</div>
 	<div class="buttons">
-		<button on:click={refresh}>
+		<IconButton
+			{loading}
+			on:click={() => {
+				loading = true;
+				refresh().finally(() => {
+					loading = false;
+				});
+			}}
+		>
 			<MdRefresh />
-		</button>
+		</IconButton>
 	</div>
 </div>
 
@@ -55,23 +65,5 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-
-		.buttons {
-			button {
-				cursor: pointer;
-				height: 3rem;
-				width: 3rem;
-				padding: 0.75rem;
-				box-sizing: border-box;
-				background: transparent;
-				border: none;
-				border-radius: 100%;
-				color: white;
-
-				&:hover {
-					background-color: rgb(255, 255, 255, 0.3);
-				}
-			}
-		}
 	}
 </style>

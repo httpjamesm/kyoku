@@ -6,6 +6,9 @@
 	import MdAllInclusive from 'svelte-icons/md/MdAllInclusive.svelte';
 	import { playNow } from '$lib/utils/queue';
 	import { Item } from '$lib/enums/item';
+	import IconButton from './buttons/IconButton.svelte';
+
+	let playNowLoading = false;
 
 	export let albumId: string;
 	export let name: string;
@@ -46,17 +49,24 @@
 		<p class="runtime">
 			{formatMinutesShort(ticksToMinutes(ticks))}
 		</p>
-		<button
-			on:click|stopPropagation={() => {
-				playNow(Item.SONG, itemId);
+		<IconButton
+			loading={playNowLoading}
+			on:click={(e) => {
+				e.stopPropagation();
+				playNowLoading = true;
+				playNow(Item.SONG, itemId).finally(() => {
+					playNowLoading = false;
+				});
 			}}
 		>
 			<MdAllInclusive />
-		</button>
+		</IconButton>
 
 		{#if isInQueue}
-			<button
-				on:click|stopPropagation={() => {
+			<IconButton
+				on:click={(e) => {
+					e.stopPropagation();
+
 					queueStore.update((store) => ({
 						...store,
 						items: store.items.filter((item) => item.id !== itemId)
@@ -64,7 +74,7 @@
 				}}
 			>
 				<MdRemove />
-			</button>
+			</IconButton>
 		{/if}
 	</div>
 </div>
