@@ -4,16 +4,19 @@
 	import toast from 'svelte-french-toast';
 	import RectangularItem from '$lib/components/RectangularItem.svelte';
 	import { Item } from '$lib/enums/item';
+	import CircularItem from '$lib/components/CircularItem.svelte';
 
 	let recentlyPlayed: any[] = [];
 	let quickPicks: any[] = [];
 	let albums: any[] = [];
+	let artists: any[] = [];
 
 	const init = async () => {
 		try {
 			recentlyPlayed = await getRecentlyPlayed();
 			quickPicks = await getSuggestions();
 			albums = await getSuggestions('MusicAlbum');
+			artists = await getSuggestions('MusicArtist');
 		} catch (e) {
 			toast.error((e as Error).message);
 		}
@@ -75,6 +78,14 @@
 			type={Item.ALBUM}
 			artistId={item.ArtistId}
 		/>
+	{/each}
+</div>
+
+<h4 class="above-heading">SUGGESTIONS</h4>
+<h3 style="margin-top: 0;">Artists</h3>
+<div class="row">
+	{#each artists as item (item.Id)}
+		<CircularItem artistId={item.Id} artist={item.Name} />
 	{/each}
 </div>
 
