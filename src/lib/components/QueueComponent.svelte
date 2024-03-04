@@ -8,6 +8,8 @@
 	import { Item } from '$lib/enums/item';
 	import IconButton from './buttons/IconButton.svelte';
 	import { deleteFromQueueById } from '$lib/utils/queue';
+	import { showMenu } from 'tauri-plugin-context-menu';
+	import { goto } from '$app/navigation';
 
 	let playNowLoading = false;
 
@@ -19,9 +21,30 @@
 	export let isInQueue = true;
 
 	let thumbnail = getItemThumbnail(albumId, 128, 128);
+
+	const onContextMenu = () => {
+		showMenu({
+			items: [
+				{
+					label: 'Go to album',
+					event: () => {
+						goto(`/app/album?id=${albumId}`);
+					}
+				}
+			]
+		});
+	};
 </script>
 
-<div class="queue-item-container">
+<div
+	class="queue-item-container"
+	on:contextmenu={(e) => {
+		e.preventDefault();
+		onContextMenu();
+	}}
+	role="button"
+	tabindex="0"
+>
 	<div class="item-data">
 		<div class="thumbnail-container">
 			<img
