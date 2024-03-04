@@ -2,7 +2,7 @@
 	export let loading = false;
 </script>
 
-<button class="icon-button" on:click>
+<button class="icon-button" on:click disabled={loading}>
 	{#if loading}
 		<img src="/icons/loading-oval.svg" class="loading-icon" alt="loading" />
 	{:else}
