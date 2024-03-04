@@ -8,7 +8,10 @@
 	import { addItemsNextInQueue, playNow } from '$lib/utils/queue';
 	import { Item } from '$lib/enums/item';
 	import { getQueueItemFromJellyfinItem } from '$lib/utils/queue';
-	import { queueStore } from '$lib/stores/queue';
+	import InteractionButton from '$lib/components/buttons/InteractionButton.svelte';
+	import MdPlayArrow from 'svelte-icons/md/MdPlayArrow.svelte';
+	import MdQueue from 'svelte-icons/md/MdQueue.svelte';
+	import { playNext } from '$lib/utils/queue';
 
 	let name = '';
 	let artists: string[] = [];
@@ -34,6 +37,14 @@
 	onMount(() => {
 		init();
 	});
+
+	const onPlayHandler = async () => {
+		await playNow(Item.ALBUM, id);
+	};
+
+	const onPlayNextHandler = async () => {
+		await playNext(Item.ALBUM, id);
+	};
 </script>
 
 <div class="wrapper">
@@ -41,15 +52,23 @@
 		<div class="art-container">
 			<img src={getItemThumbnail(id, 512, 512)} alt="album art" />
 		</div>
-		<div class="metadata">
-			<h2>{name}</h2>
-			<br />
-			<p class="details">
-				Album • {artists.join(', ')} • {year}
-			</p>
-			<p class="details">
-				{songItems.length} songs • {formatMinutes(ticksToMinutes(ticks))}
-			</p>
+		<div class="album-info">
+			<div class="metadata">
+				<h2>{name}</h2>
+				<br />
+				<p class="details">
+					Album • {artists.join(', ')} • {year}
+				</p>
+				<p class="details">
+					{songItems.length} songs • {formatMinutes(ticksToMinutes(ticks))}
+				</p>
+			</div>
+			<div class="buttons">
+				<InteractionButton on:click={onPlayHandler} icon={MdPlayArrow}>Play</InteractionButton>
+				<InteractionButton type="secondary" on:click={onPlayNextHandler} icon={MdQueue}
+					>Play Next</InteractionButton
+				>
+			</div>
 		</div>
 	</div>
 
@@ -104,15 +123,26 @@
 				}
 			}
 
-			.metadata {
-				h2 {
-					margin: 0;
-					font-size: 2.25rem;
+			.album-info {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+
+				.metadata {
+					h2 {
+						margin: 0;
+						font-size: 2.25rem;
+					}
+
+					.details {
+						margin: 0;
+						color: #ececec;
+					}
 				}
 
-				.details {
-					margin: 0;
-					color: #ececec;
+				.buttons {
+					display: flex;
+					gap: 1rem;
 				}
 			}
 		}
