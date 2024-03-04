@@ -12,7 +12,7 @@ export interface QueueItem {
 	album: string;
 	year: number;
 	id: string;
-	// duration:
+	ticks: number;
 }
 
 export const queueStore = writable<QueueStore>({

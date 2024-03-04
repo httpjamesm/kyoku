@@ -29,7 +29,8 @@ export const getQueueItemFromJellyfinItem = (item: any) => {
 		artist: item.AlbumArtist,
 		album: item.Album,
 		year: item.ProductionYear,
-		id: item.Id
+		id: item.Id,
+		ticks: item.RunTimeTicks
 	};
 };
 

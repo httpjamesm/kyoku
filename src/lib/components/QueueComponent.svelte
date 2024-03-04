@@ -2,11 +2,12 @@
 	import { getItemThumbnail } from '$lib/api/image';
 	import MdRemove from 'svelte-icons/md/MdRemove.svelte';
 	import { queueStore } from '$lib/stores/queue';
+	import { formatMinutesShort, ticksToMinutes } from '$lib/utils/ticks';
 
 	export let albumId: string;
 	export let name: string;
 	export let artist: string;
-	export let duration = 0;
+	export let ticks = 0;
 	export let itemId: string;
 </script>
 
@@ -38,6 +39,9 @@
 		</div>
 	</div>
 	<div class="buttons">
+		<p class="runtime">
+			{formatMinutesShort(ticksToMinutes(ticks))}
+		</p>
 		<button
 			on:click|stopPropagation={() => {
 				queueStore.update((store) => ({
@@ -117,6 +121,10 @@
 			display: flex;
 			gap: 1rem;
 			align-items: center;
+
+			.runtime {
+				color: #7c7c7c;
+			}
 
 			button {
 				height: 3rem;

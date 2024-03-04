@@ -42,6 +42,7 @@
 							name={item.name}
 							artist={item.artist}
 							itemId={item.id}
+							ticks={item.ticks}
 						/>
 
 						{#if index !== $queueStore?.items.length}
