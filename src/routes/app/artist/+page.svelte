@@ -12,7 +12,6 @@
 	import { getQueueItemFromJellyfinItem } from '$lib/utils/queue';
 	import { queueStore } from '$lib/stores/queue';
 
-	let id = '';
 	let name = '';
 	let description = '';
 	let genres: string[] = [];
@@ -31,10 +30,11 @@
 		albums = await getArtistRecentAlbums(id);
 	};
 
-	onMount(() => {
-		id = $page.url.searchParams.get('id') as string;
+	$: id = $page.url.searchParams.get('id') as string;
+
+	$: if (id) {
 		init();
-	});
+	}
 
 	const onPlayHandler = async () => {
 		queueStore.set({
