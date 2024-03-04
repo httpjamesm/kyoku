@@ -99,6 +99,7 @@
 	.wrapper {
 		width: 100%;
 		min-height: 100vh;
+		padding-top: 2rem;
 
 		.header {
 			position: relative;
