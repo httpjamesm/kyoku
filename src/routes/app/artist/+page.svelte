@@ -19,6 +19,8 @@
 	let topSongItems: any[] = [];
 	let albums: any[] = [];
 
+	let topTracksExpanded = false;
+
 	const init = async () => {
 		const artist = await getById(id);
 		name = artist.Name;
@@ -62,19 +64,31 @@
 
 		<div class="content">
 			<h3>Top Tracks</h3>
-			{#each topSongItems as item, index (item.Id)}
-				<QueueComponentButton
-					albumId={item.AlbumId}
-					name={item.Name}
-					artist={item.Artist}
-					itemId={item.Id}
-					ticks={item.RunTimeTicks}
-					isInQueue={false}
-				/>
-				{#if index !== topSongItems.length}
-					<Divider />
-				{/if}
-			{/each}
+			<div class="top-tracks" class:expanded={topTracksExpanded}>
+				{#each topSongItems as item, index (item.Id)}
+					<QueueComponentButton
+						albumId={item.AlbumId}
+						name={item.Name}
+						artist={item.AlbumArtist}
+						itemId={item.Id}
+						ticks={item.RunTimeTicks}
+						isInQueue={false}
+					/>
+					{#if index !== topSongItems.length}
+						<Divider />
+					{/if}
+				{/each}
+				<div class="show-more-container" class:expanded={topTracksExpanded}>
+					<button
+						class="show-more"
+						on:click={() => {
+							topTracksExpanded = !topTracksExpanded;
+						}}
+					>
+						{topTracksExpanded ? 'Show Less' : 'Show More'}
+					</button>
+				</div>
+			</div>
 
 			<h3>Albums</h3>
 			<div class="row-wrap">
@@ -166,6 +180,56 @@
 			padding: 1rem 3rem;
 			box-sizing: border-box;
 			width: 100%;
+
+			.top-tracks {
+				max-height: 20rem;
+				overflow-y: hidden;
+				position: relative;
+
+				&.expanded {
+					max-height: fit-content;
+					padding-bottom: 3rem;
+				}
+
+				:not(&.expanded) + &::after {
+					content: '';
+					position: absolute;
+					left: 0;
+					width: 100%;
+					top: 14rem;
+					height: 100px; /* Adjust the height as needed */
+					background: linear-gradient(to bottom, rgba(255, 255, 255, 0), 50%, rgba(0, 0, 0, 1));
+				}
+
+				.show-more-container {
+					position: absolute;
+					left: 0;
+					width: 100%;
+					top: 16rem;
+					z-index: 1;
+					display: flex;
+					justify-content: center;
+
+					&.expanded {
+						position: absolute;
+						top: auto;
+					}
+
+					.show-more {
+						background-color: white;
+						padding: 0.5rem 1rem;
+						border-radius: 50px;
+						border: none;
+						font-size: 1rem;
+						font-weight: bold;
+						cursor: pointer;
+
+						&:hover {
+							background-color: rgb(255, 255, 255, 0.7);
+						}
+					}
+				}
+			}
 		}
 	}
 

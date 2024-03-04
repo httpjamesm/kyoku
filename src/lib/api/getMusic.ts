@@ -138,7 +138,8 @@ export const getArtistTopTracks = async (artistId: string) => {
 			SortBy: 'PlayCount',
 			Recursive: 'true',
 			IncludeItemTypes: 'Audio',
-			SortOrder: 'Descending'
+			SortOrder: 'Descending',
+			Limit: '20'
 		},
 		headers: await getHeaders()
 	});
