@@ -1,4 +1,10 @@
-import { getAlbumTracks, getById, getInstantMixFromSong, getParentItems } from '$lib/api/getMusic';
+import {
+	getAlbumTracks,
+	getArtistTopTracks,
+	getById,
+	getInstantMixFromSong,
+	getParentItems
+} from '$lib/api/getMusic';
 import { Item } from '$lib/enums/item';
 import type { QueueItem, QueueStore } from '$lib/stores/queue';
 import { queueStore } from '$lib/stores/queue';
@@ -12,6 +18,9 @@ export const getNewQueue = async (type: Item, id: string) => {
 			break;
 		case Item.ALBUM:
 			items = [...(await getParentItems(id)), ...(await getInstantMixFromSong('Albums', id))];
+			break;
+		case Item.ARTIST:
+			items = await getArtistTopTracks(id);
 			break;
 	}
 

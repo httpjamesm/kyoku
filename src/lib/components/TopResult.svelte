@@ -5,8 +5,9 @@
 	import { queueStore } from '$lib/stores/queue';
 	import { getNewQueue } from '$lib/utils/queue';
 	import { playNext } from '$lib/utils/queue';
-	import type { Item } from '$lib/enums/item';
+	import { Item } from '$lib/enums/item';
 	import InteractionButton from './buttons/InteractionButton.svelte';
+
 	export let name: string;
 	export let albumId: string;
 	export let album: string;
@@ -25,6 +26,16 @@
 	const onPlayNextHandler = async () => {
 		playNext(type, itemId);
 	};
+
+	let href = '';
+
+	$: switch (type) {
+		case Item.ARTIST:
+			href = `/app/artist?id=${itemId}`;
+			break;
+		default:
+			href = `/app/album?id=${albumId}`;
+	}
 </script>
 
 <div
@@ -35,16 +46,20 @@
 	<div class="result-info-parent">
 		<div class="result-info-container">
 			<div class="art-container">
-				<a class="link" href="/app/album?id={albumId}">
+				<a class="link" {href}>
 					<img src={getItemThumbnail(albumId, 512, 512)} alt="album art" class="album-art" />
 				</a>
 			</div>
 			<div class="details">
 				<div class="metadata">
 					<h1>{name}</h1>
-					<p>
-						{type} • {artist} • {album} ({year})
-					</p>
+					{#if type === Item.ARTIST}
+						<p>Artist</p>
+					{:else}
+						<p>
+							{type} • {artist} • {album} ({year})
+						</p>
+					{/if}
 				</div>
 				<div class="buttons">
 					<InteractionButton on:click={onPlayHandler} icon={MdPlayArrow}>Play</InteractionButton>
