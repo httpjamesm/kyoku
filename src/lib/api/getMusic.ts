@@ -128,7 +128,7 @@ export const getInstantMixFromSong = async (type: string = 'Items', itemId: stri
 		responseType: ResponseType.JSON
 	});
 
-	console.log(res.data);
+	const items = (res.data as any).Items;
 
-	return (res.data as any).Items;
+	return [...new Set(items)];
 };

@@ -5,6 +5,8 @@
 	import { queueStore } from '$lib/stores/queue';
 	import Divider from './Divider.svelte';
 	import QueueComponentButton from './QueueComponentButton.svelte';
+	import { dndzone } from 'svelte-dnd-action';
+	import { flip } from 'svelte/animate';
 </script>
 
 <div class="now-playing-expanded-container" transition:fade={{ duration: 250 }}>
@@ -17,23 +19,35 @@
 		</div>
 		<div class="track-menu-container">
 			<h3>Queue</h3>
-			<div class="queue-container">
-				{#each $queueStore?.items as item, index}
-					<QueueComponentButton
-						on:click={() => {
-							queueStore.update((store) => ({
-								...store,
-								currentIndex: index
-							}));
-						}}
-						albumId={item.albumId}
-						name={item.name}
-						artist={item.artist}
-						itemId={item.id}
-					/>
-					{#if index !== $queueStore?.items.length}
-						<Divider />
-					{/if}
+			<div
+				class="queue-container"
+				use:dndzone={{ items: $queueStore?.items, flipDurationMs: 300 }}
+				on:finalize={(e) => {
+					queueStore.update((store) => ({ ...store, items: e.detail.items }));
+				}}
+				on:consider={(e) => {
+					queueStore.update((store) => ({ ...store, items: e.detail.items }));
+				}}
+			>
+				{#each $queueStore?.items as item, index (item.id)}
+					<div animate:flip={{ duration: 300 }}>
+						<QueueComponentButton
+							on:click={() => {
+								queueStore.update((store) => ({
+									...store,
+									currentIndex: index
+								}));
+							}}
+							albumId={item.albumId}
+							name={item.name}
+							artist={item.artist}
+							itemId={item.id}
+						/>
+
+						{#if index !== $queueStore?.items.length}
+							<Divider />
+						{/if}
+					</div>
 				{/each}
 			</div>
 		</div>
