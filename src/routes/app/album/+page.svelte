@@ -46,12 +46,24 @@
 	const onPlayNextHandler = async () => {
 		await playNext(Item.ALBUM, id);
 	};
+
+	let thumbnail = '';
+
+	$: if (id) {
+		thumbnail = getItemThumbnail(id, 512, 512);
+	}
 </script>
 
 <div class="wrapper">
 	<div class="info">
 		<div class="art-container">
-			<img src={getItemThumbnail(id, 512, 512)} alt="album art" />
+			<img
+				src={thumbnail}
+				alt="album art"
+				on:error={() => {
+					thumbnail = '/icons/unknown-track.webp';
+				}}
+			/>
 		</div>
 		<div class="album-info">
 			<div class="metadata">
