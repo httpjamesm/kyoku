@@ -202,7 +202,7 @@
 
 	onDestroy(() => {
 		if (audioElement) {
-			audioElement.oncanplay = null;
+			audioElement.oncanplaythrough = null;
 			audioElement.onended = null;
 		}
 	});
