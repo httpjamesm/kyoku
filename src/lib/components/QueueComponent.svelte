@@ -3,6 +3,9 @@
 	import MdRemove from 'svelte-icons/md/MdRemove.svelte';
 	import { queueStore } from '$lib/stores/queue';
 	import { formatMinutesShort, ticksToMinutes } from '$lib/utils/ticks';
+	import MdAllInclusive from 'svelte-icons/md/MdAllInclusive.svelte';
+	import { playNow } from '$lib/utils/queue';
+	import { Item } from '$lib/enums/item';
 
 	export let albumId: string;
 	export let name: string;
@@ -42,6 +45,14 @@
 		<p class="runtime">
 			{formatMinutesShort(ticksToMinutes(ticks))}
 		</p>
+		<button
+			on:click|stopPropagation={() => {
+				playNow(Item.SONG, itemId);
+			}}
+		>
+			<MdAllInclusive />
+		</button>
+
 		<button
 			on:click|stopPropagation={() => {
 				queueStore.update((store) => ({
