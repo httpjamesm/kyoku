@@ -9,14 +9,21 @@
 	import MdSearch from 'svelte-icons/md/MdSearch.svelte';
 	import { goto } from '$app/navigation';
 	import { onMount, onDestroy } from 'svelte';
+	import MdSettings from 'svelte-icons/md/MdSettings.svelte';
 
 	let menuItems = [
 		{
 			name: 'Home',
-			icon: MdHome
+			icon: MdHome,
+			type: 'full'
 		},
-		{ name: 'Library', icon: MdLibraryMusic },
-		{ name: 'Search', icon: MdSearch }
+		{ name: 'Library', icon: MdLibraryMusic, type: 'full' },
+		{ name: 'Search', icon: MdSearch, type: 'full' },
+		{
+			name: 'Settings',
+			icon: MdSettings,
+			type: 'icon'
+		}
 	];
 
 	let audioPlayer: any;
@@ -89,7 +96,7 @@
 	<div class="interactive">
 		<header class="header">
 			<nav>
-				{#each menuItems as menuItem}
+				{#each menuItems.filter((item) => item.type === 'full') as menuItem}
 					<a
 						href="/app/{menuItem.name.toLowerCase()}"
 						class:selected={$page.url.pathname === `/app/${menuItem.name.toLowerCase()}`}
@@ -99,6 +106,16 @@
 					</a>
 				{/each}
 			</nav>
+			<div class="icon-nav">
+				{#each menuItems.filter((item) => item.type === 'icon') as menuItem}
+					<a
+						href="/app/{menuItem.name.toLowerCase()}"
+						class:selected={$page.url.pathname === `/app/${menuItem.name.toLowerCase()}`}
+					>
+						<svelte:component this={menuItem.icon} />
+					</a>
+				{/each}
+			</div>
 		</header>
 
 		<slot />
@@ -128,6 +145,9 @@
 
 			.header {
 				width: 100%;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
 
 				nav {
 					display: flex;
@@ -160,6 +180,32 @@
 
 						font-size: 2rem;
 						text-decoration: none;
+					}
+				}
+
+				.icon-nav {
+					a {
+						background: transparent;
+						border: none;
+						border-radius: 100%;
+						height: 3rem;
+						width: 3rem;
+						padding: 0.5rem;
+						box-sizing: border-box;
+						color: white;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						cursor: pointer;
+
+						&:hover {
+							background-color: rgb(255, 255, 255, 0.2);
+						}
+
+						&.selected {
+							font-weight: 900;
+							background-color: rgb(255, 255, 255, 0.4);
+						}
 					}
 				}
 			}
