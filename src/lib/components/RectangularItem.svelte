@@ -11,6 +11,7 @@
 	import { getNewQueue, playNext } from '$lib/utils/queue';
 	import { Item } from '$lib/enums/item';
 	import { goto } from '$app/navigation';
+	import { getItemThumbnail } from '$lib/api/image';
 
 	export let itemId: string;
 	export let albumId: string;
@@ -88,6 +89,8 @@
 			]
 		});
 	};
+
+	let albumArt = getItemThumbnail(itemId);
 </script>
 
 <button
@@ -109,8 +112,11 @@
 >
 	<div class="image-container">
 		<img
-			src="{getUrl()}/Items/{albumId}/Images/Primary?fillHeight=334&fillWidth=334&quality=96"
+			src={albumArt}
 			alt="{name} album art"
+			on:error={() => {
+				albumArt = '/icons/unknown-track.webp';
+			}}
 		/>
 		{#if hovering || currentInQueue}
 			<div
