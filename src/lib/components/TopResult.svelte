@@ -17,7 +17,7 @@
 	export let year: number;
 	export let hasImage: boolean;
 
-	let thumbnail = getItemThumbnail(albumId, 1024, 512);
+	$: thumbnail = getItemThumbnail(albumId, 1024, 512);
 
 	const onPlayHandler = async () => {
 		queueStore.set({
@@ -51,6 +51,7 @@
 						src={thumbnail}
 						alt="album art"
 						class="album-art"
+						class:artist={type === Item.ARTIST}
 						on:error={() => {
 							switch (type) {
 								case Item.SONG:
@@ -134,11 +135,16 @@
 
 				.art-container {
 					height: 100%;
+
 					.album-art {
 						object-fit: contain;
 						height: 100%;
 						border-radius: 10px;
 						box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+
+						&.artist {
+							border-radius: 100%;
+						}
 					}
 				}
 
