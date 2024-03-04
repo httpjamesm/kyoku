@@ -2,6 +2,7 @@
 	import { getContext } from 'svelte';
 	import { playerContextKey } from '$lib/context/player';
 	import type { PlayerContextKey } from '$lib/context/player';
+	import { onMount, onDestroy } from 'svelte';
 
 	export let progress = 0;
 
@@ -24,6 +25,29 @@
 		lastMovedPositionPercentage = positionPercentage;
 		setProgress(positionPercentage / 100);
 	};
+
+	const handleMouseUp = () => {
+		clicking = false;
+		window.removeEventListener('mousemove', handleMouseMove);
+		window.removeEventListener('mouseup', handleMouseUp);
+		document.body.style.userSelect = 'auto';
+		document.body.style.webkitUserSelect = 'auto';
+	};
+
+	onMount(() => {
+		progressBarContainer.addEventListener('mousedown', () => {
+			clicking = true;
+			window.addEventListener('mousemove', handleMouseMove);
+			window.addEventListener('mouseup', handleMouseUp);
+			document.body.style.userSelect = 'none';
+			document.body.style.webkitUserSelect = 'none';
+		});
+	});
+
+	onDestroy(() => {
+		window.removeEventListener('mousemove', handleMouseMove);
+		window.removeEventListener('mouseup', handleMouseUp);
+	});
 </script>
 
 <div
@@ -34,13 +58,6 @@
 	on:mouseleave={() => {
 		hoveringOverBar = false;
 	}}
-	on:mousedown={() => {
-		clicking = true;
-	}}
-	on:mouseup={() => {
-		clicking = false;
-	}}
-	on:mousemove={handleMouseMove}
 	role="button"
 	tabindex="-1"
 	bind:this={progressBarContainer}
