@@ -5,18 +5,35 @@
 	import RectangularItem from '$lib/components/RectangularItem.svelte';
 	import { Item } from '$lib/enums/item';
 	import CircularItem from '$lib/components/CircularItem.svelte';
+	import HomeSection from '$lib/components/home/HomeSection.svelte';
 
 	let recentlyPlayed: any[] = [];
 	let quickPicks: any[] = [];
 	let albums: any[] = [];
 	let artists: any[] = [];
 
+	const refreshRecentlyPlayed = async () => {
+		recentlyPlayed = await getRecentlyPlayed();
+	};
+
+	const refreshQuickPicks = async () => {
+		quickPicks = await getSuggestions();
+	};
+
+	const refreshAlbums = async () => {
+		albums = await getSuggestions('MusicAlbum');
+	};
+
+	const refreshArtists = async () => {
+		artists = await getSuggestions('MusicArtist');
+	};
+
 	const init = async () => {
 		try {
-			recentlyPlayed = await getRecentlyPlayed();
-			quickPicks = await getSuggestions();
-			albums = await getSuggestions('MusicAlbum');
-			artists = await getSuggestions('MusicArtist');
+			await refreshRecentlyPlayed();
+			await refreshQuickPicks();
+			await refreshAlbums();
+			await refreshArtists();
 		} catch (e) {
 			toast.error((e as Error).message);
 		}
@@ -27,9 +44,7 @@
 	});
 </script>
 
-<h3>Recently Played</h3>
-
-<div class="row">
+<HomeSection name="recently played" refresh={refreshRecentlyPlayed}>
 	{#each recentlyPlayed as item (item.Id)}
 		<RectangularItem
 			itemId={item.Id}
@@ -42,13 +57,11 @@
 			artistId={item.AlbumArtists[0].Id}
 		/>
 	{/each}
-</div>
+</HomeSection>
 
 <br />
 
-<h4 class="above-heading">SUGGESTIONS</h4>
-<h3 style="margin-top: 0;">Quick Picks</h3>
-<div class="row">
+<HomeSection name="quick picks" subtitle="for you" refresh={refreshQuickPicks}>
 	{#each quickPicks as item (item.Id)}
 		<RectangularItem
 			itemId={item.Id}
@@ -60,13 +73,11 @@
 			artistId={item.AlbumArtists[0].Id}
 		/>
 	{/each}
-</div>
+</HomeSection>
 
 <br />
 
-<h4 class="above-heading">SUGGESTIONS</h4>
-<h3 style="margin-top: 0;">From your library</h3>
-<div class="row">
+<HomeSection name="from your library" subtitle="for you" refresh={refreshAlbums}>
 	{#each albums as item (item.Id)}
 		<RectangularItem
 			itemId={item.Id}
@@ -79,31 +90,10 @@
 			artistId={item.ArtistId}
 		/>
 	{/each}
-</div>
+</HomeSection>
 
-<h4 class="above-heading">SUGGESTIONS</h4>
-<h3 style="margin-top: 0;">Artists</h3>
-<div class="row">
+<HomeSection name="recommended artists" subtitle="for you" refresh={refreshArtists}>
 	{#each artists as item (item.Id)}
 		<CircularItem artistId={item.Id} artist={item.Name} />
 	{/each}
-</div>
-
-<style lang="scss">
-	.row {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
-
-		gap: 1rem;
-		overflow: none;
-		height: fit-content;
-		width: 100%;
-	}
-
-	.above-heading {
-		font-weight: 200;
-		margin-bottom: 0;
-		font-size: 0.7rem;
-	}
-</style>
+</HomeSection>
