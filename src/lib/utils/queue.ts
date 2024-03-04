@@ -30,7 +30,8 @@ export const getQueueItemFromJellyfinItem = (item: any) => {
 		album: item.Album,
 		year: item.ProductionYear,
 		id: item.Id,
-		ticks: item.RunTimeTicks
+		ticks: item.RunTimeTicks,
+		artistId: item.ArtistItems[0].Id
 	};
 };
 

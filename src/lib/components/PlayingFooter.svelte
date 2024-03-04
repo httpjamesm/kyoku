@@ -114,7 +114,7 @@
 			<div class="details">
 				<p class="name">{currentQueueItem.name}</p>
 				<p class="metadata">
-					{currentQueueItem.artist} •
+					<a href="/app/artist?id={currentQueueItem.artistId}">{currentQueueItem.artist}</a> •
 					<a href="/app/album?id={currentQueueItem.albumId}">{currentQueueItem.album}</a>
 					• {currentQueueItem.year}
 				</p>

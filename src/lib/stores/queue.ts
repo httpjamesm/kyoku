@@ -13,6 +13,7 @@ export interface QueueItem {
 	year: number;
 	id: string;
 	ticks: number;
+	artistId: string;
 }
 
 export const queueStore = writable<QueueStore>({
