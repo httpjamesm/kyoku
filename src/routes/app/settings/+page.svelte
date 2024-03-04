@@ -2,16 +2,29 @@
 	import SettingsSection from '$lib/components/settings/SettingsSection.svelte';
 	import Setting from '$lib/components/settings/Setting.svelte';
 	import Select from '$lib/components/input/Select.svelte';
+	import TextInput from '$lib/components/input/TextInput.svelte';
 	import { getSetting, setSetting } from '$lib/utils/settings';
+	import InteractionButton from '$lib/components/buttons/InteractionButton.svelte';
+	import MdClearAll from 'svelte-icons/md/MdClearAll.svelte';
+	import { goto } from '$app/navigation';
 
 	let audioQuality = getSetting('playback.audioQuality');
 	let audioCodec = getSetting('playback.audioCodec');
 
+	let serverUrl = getSetting('serverUrl');
+
 	$: {
 		setSetting('playback.audioQuality', audioQuality);
 		setSetting('playback.audioCodec', audioCodec);
+		setSetting('serverUrl', serverUrl);
 	}
 </script>
+
+<SettingsSection name="Connectivity">
+	<Setting name="Server URL">
+		<TextInput id="server-url-input" bind:value={serverUrl} />
+	</Setting>
+</SettingsSection>
 
 <SettingsSection name="Playback">
 	<Setting name="Audio Quality">
@@ -49,5 +62,17 @@
 				{ value: 'flac', label: 'FLAC' }
 			]}
 		/>
+	</Setting>
+</SettingsSection>
+
+<SettingsSection name="App">
+	<Setting name="Logout & Reset">
+		<InteractionButton
+			icon={MdClearAll}
+			on:click={() => {
+				window.localStorage.clear();
+				goto('/');
+			}}>Reset</InteractionButton
+		>
 	</Setting>
 </SettingsSection>
