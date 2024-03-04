@@ -2,7 +2,6 @@
 	import { page } from '$app/stores';
 	import { getById, getAlbumTracks } from '$lib/api/getMusic';
 	import { getItemThumbnail } from '$lib/api/image';
-	import { onMount } from 'svelte';
 	import { ticksToMinutes, formatMinutes } from '$lib/utils/ticks';
 	import TrackComponent from '$lib/components/TrackComponent.svelte';
 	import { addItemsNextInQueue, playNow } from '$lib/utils/queue';
@@ -18,12 +17,10 @@
 	let artists: string[] = [];
 	let year = 0;
 	let songItems: any[] = [];
-	let id = '';
 	let ticks = 0;
 
 	const init = async () => {
 		try {
-			id = $page.url.searchParams.get('id') as string;
 			const albumItem = await getById(id);
 
 			name = albumItem.Name;
@@ -35,9 +32,11 @@
 		} catch {}
 	};
 
-	onMount(() => {
+	$: id = $page.url.searchParams.get('id') as string;
+
+	$: if (id) {
 		init();
-	});
+	}
 
 	const onPlayHandler = async () => {
 		await playNow(Item.ALBUM, id);
