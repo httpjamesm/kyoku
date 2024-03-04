@@ -15,6 +15,23 @@
 	export let type: Item;
 	export let artist: string;
 	export let year: number;
+	export let hasImage: boolean;
+
+	let thumbnail = '';
+
+	$: if (!hasImage) {
+		switch (type) {
+			case Item.SONG:
+			case Item.ALBUM:
+				thumbnail = '/icons/unknown-track.webp';
+				break;
+			case Item.ARTIST:
+				thumbnail = '/icons/unknown-artist.webp';
+				break;
+		}
+	} else {
+		thumbnail = getItemThumbnail(albumId, 1024, 512);
+	}
 
 	const onPlayHandler = async () => {
 		queueStore.set({
@@ -38,16 +55,13 @@
 	}
 </script>
 
-<div
-	class="result-container"
-	style="background-image: url('{getItemThumbnail(albumId, 1024, 512)}')"
->
+<div class="result-container" style="background-image: url('{thumbnail}')">
 	<div class="result-overlay" />
 	<div class="result-info-parent">
 		<div class="result-info-container">
 			<div class="art-container">
 				<a class="link" {href}>
-					<img src={getItemThumbnail(albumId, 512, 512)} alt="album art" class="album-art" />
+					<img src={thumbnail} alt="album art" class="album-art" />
 				</a>
 			</div>
 			<div class="details">
