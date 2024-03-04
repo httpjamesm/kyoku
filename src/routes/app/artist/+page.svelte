@@ -43,12 +43,12 @@
 		});
 	};
 
-	let artistImage = getItemThumbnail(id, 512, 512);
+	$: artistImage = getItemThumbnail(id, 512, 512);
 </script>
 
 {#if id}
 	<div class="wrapper">
-		<div class="header" style="background-image: url('{getItemThumbnail(id, 2048, 2048)}')">
+		<div class="header" style="background-image: url('{artistImage}')">
 			<div class="overlay" />
 			<div class="artist-info">
 				<img
