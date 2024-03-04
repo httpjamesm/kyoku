@@ -20,8 +20,6 @@ export const getHeaders = async () => {
 		'X-Emby-Authorization': `MediaBrowser Client="kyoku", Device="Computer", DeviceId="${deviceId}", Version="${version}"${token ? `, Token="${token}"` : ''}`
 	};
 
-	console.log(headers);
-
 	return headers;
 };
 
