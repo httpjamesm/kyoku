@@ -92,6 +92,8 @@
 	{/each}
 </HomeSection>
 
+<br />
+
 <HomeSection name="recommended artists" subtitle="for you" refresh={refreshArtists}>
 	{#each artists as item (item.Id)}
 		<CircularItem artistId={item.Id} artist={item.Name} />
