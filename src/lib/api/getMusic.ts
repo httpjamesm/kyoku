@@ -98,8 +98,6 @@ export const getSuggestions = async (type: string = 'Audio') => {
 		responseType: ResponseType.JSON
 	});
 
-	console.log(res.data);
-
 	return (res.data as any).Items;
 };
 
@@ -114,8 +112,6 @@ export const getParentItems = async (id: string) => {
 			SortBy: 'ParentIndexNumber,IndexNumber,SortName'
 		}
 	});
-
-	console.log(res);
 
 	return (res.data as any).Items;
 };
