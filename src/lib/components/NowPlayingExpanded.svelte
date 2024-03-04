@@ -10,7 +10,7 @@
 </script>
 
 <div class="now-playing-expanded-container" transition:fade={{ duration: 250 }}>
-	{#if $queueStore && $queueStore.currentIndex > $queueStore.items.length}
+	{#if $queueStore && $queueStore.items.length > $queueStore.currentIndex}
 		<div class="thumbnail-container">
 			<img
 				src={getItemThumbnail($queueStore.items[$queueStore.currentIndex].albumId, 1024, 1024)}
@@ -21,7 +21,7 @@
 			<h3>Queue</h3>
 			<div
 				class="queue-container"
-				use:dndzone={{ items: $queueStore?.items, flipDurationMs: 300 }}
+				use:dndzone={{ items: $queueStore.items, flipDurationMs: 300 }}
 				on:finalize={(e) => {
 					queueStore.update((store) => ({ ...store, items: e.detail.items }));
 				}}
@@ -29,7 +29,7 @@
 					queueStore.update((store) => ({ ...store, items: e.detail.items }));
 				}}
 			>
-				{#each $queueStore?.items as item, index (item.id)}
+				{#each $queueStore.items as item, index (item.id)}
 					<div animate:flip={{ duration: 300 }}>
 						<QueueComponentButton
 							on:click={() => {
