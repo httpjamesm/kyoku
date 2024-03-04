@@ -93,6 +93,10 @@
 <button
 	class="item-container"
 	on:click={() => {
+		if (type === Item.ALBUM) {
+			goto(`/app/album?id=${itemId}`);
+			return;
+		}
 		startTrack();
 	}}
 	on:mouseenter={() => {
@@ -114,8 +118,18 @@
 				transition:fade={{
 					duration: 100
 				}}
+				class:album={type === Item.ALBUM}
 			>
-				<div class="icon">
+				<div
+					class="icon"
+					class:album={type === Item.ALBUM}
+					role={type === Item.ALBUM ? 'button' : 'none'}
+					on:click={(e) => {
+						if (type !== Item.ALBUM) return;
+						e.stopPropagation();
+						startTrack();
+					}}
+				>
 					{#if type === Item.SONG}
 						{#if $queueStore?.items.length > $queueStore?.currentIndex && currentInQueue}
 							{#if $isPlayingStore}
@@ -193,9 +207,30 @@
 
 				background-color: rgb(0, 0, 0, 0.5);
 
+				&.album {
+					background-color: rgb(0, 0, 0, 0.2);
+				}
+
 				.icon {
 					height: 3rem;
 					width: 3rem;
+
+					&.album {
+						position: absolute;
+						right: 1rem;
+						bottom: 1rem;
+						height: 2rem;
+						width: 2rem;
+						background-color: rgb(0, 0, 0, 0.7);
+						border-radius: 100%;
+						padding: 0.5rem;
+						transition-duration: 250ms;
+
+						&:hover {
+							background-color: rgb(0, 0, 0, 1);
+							transform: scale(1.15);
+						}
+					}
 				}
 			}
 		}
