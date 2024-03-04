@@ -118,6 +118,7 @@
 
 			.art-container {
 				min-width: 20rem;
+				max-width: 20rem;
 				img {
 					width: 100%;
 					border-radius: 10px;
