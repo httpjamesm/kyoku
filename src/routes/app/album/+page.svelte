@@ -59,6 +59,7 @@
 				<p class="details">
 					Album • {artists.join(', ')} • {year}
 				</p>
+				<br />
 				<p class="details">
 					{songItems.length} songs • {formatMinutes(ticksToMinutes(ticks))}
 				</p>
@@ -116,7 +117,7 @@
 			gap: 3rem;
 
 			.art-container {
-				width: 20rem;
+				min-width: 20rem;
 				img {
 					width: 100%;
 					border-radius: 10px;
