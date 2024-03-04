@@ -41,6 +41,7 @@
 	}
 
 	export function play() {
+		if (nextAudioElement.src && !nextAudioElement.paused) return;
 		audioElement.play();
 	}
 
@@ -95,10 +96,7 @@
 		if (!isNext) {
 			// Only attach event listeners to the current track
 			targetElement.oncanplaythrough = () => {
-				// This event ensures the track is ready to play through to the end without stopping
-				if (!isNext) {
-					play(); // Automatically start playback for the current track
-				}
+				play();
 			};
 
 			targetElement.ontimeupdate = () => {
@@ -112,22 +110,24 @@
 			};
 
 			targetElement.onended = () => {
-				if (currentQueueItem) {
-					reportFinishedPlayback(currentQueueItem.id);
-				}
-
-				// Switch the audio elements and their corresponding queue items
-				[audioElement, nextAudioElement] = [nextAudioElement, audioElement];
-				[currentQueueItem, nextQueueItem] = [nextQueueItem, null];
-
-				// Play the preloaded track immediately
-				play();
-
-				// Preload the next track
-				preloadNextTrack();
+				handleTrackEnd();
 			};
 		}
 	}
+
+	const handleTrackEnd = () => {
+		if (currentQueueItem) {
+			reportFinishedPlayback(currentQueueItem.id);
+		}
+
+		// Swapping logic remains the same but is encapsulated in a function
+		[audioElement, nextAudioElement] = [nextAudioElement, audioElement];
+		[currentQueueItem, nextQueueItem] = [nextQueueItem, null];
+
+		preloadNextTrack(); // Preload the next track
+
+		play(); // Play the next track
+	};
 
 	function isRelevantChange(prevState: QueueStore, currentState: QueueStore) {
 		// Check if the current index has changed
