@@ -82,8 +82,8 @@
 						itemId={item.Id}
 						ticks={item.RunTimeTicks}
 						isInQueue={false}
-						on:click={() => {
-							playNow(Item.SONG, item.Id);
+						on:click={async () => {
+							await playNow(Item.SONG, item.Id);
 							const remainingSongs = topSongItems.slice(index + 1);
 							const remainingSongsQueueItems = remainingSongs.map((song) =>
 								getQueueItemFromJellyfinItem(song)
