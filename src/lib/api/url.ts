@@ -25,9 +25,7 @@ const checkServerConnection = async (primary: boolean) => {
 		primary ? 'serverUrl' : 'backupServerUrl'
 	) as string;
 
-	console.log(`checking ${serverUrl}`);
-
-	await client.get(serverUrl, {
+	await client.get(`${serverUrl}/Users/${window.localStorage.getItem('userId')}`, {
 		timeout: 3
 	});
 };
