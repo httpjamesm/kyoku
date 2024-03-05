@@ -5,6 +5,7 @@
 	export let placeholder = '';
 	export let required = false;
 	export let type = 'text';
+	export let disabled = false;
 
 	let input: HTMLInputElement;
 
@@ -18,11 +19,38 @@
 		<label for={id}>{label}</label>
 	{/if}
 	{#if type === 'text'}
-		<input {id} type="text" {placeholder} bind:value on:change bind:this={input} {required} />
+		<input
+			{id}
+			type="text"
+			{placeholder}
+			bind:value
+			on:change
+			bind:this={input}
+			{disabled}
+			{required}
+		/>
 	{:else if type === 'password'}
-		<input {id} type="password" {placeholder} bind:value on:change bind:this={input} {required} />
+		<input
+			{id}
+			type="password"
+			{placeholder}
+			bind:value
+			on:change
+			bind:this={input}
+			{disabled}
+			{required}
+		/>
 	{:else if type === 'url'}
-		<input {id} type="url" {placeholder} bind:value on:change bind:this={input} {required} />
+		<input
+			{id}
+			type="url"
+			{placeholder}
+			bind:value
+			on:change
+			bind:this={input}
+			{disabled}
+			{required}
+		/>
 	{/if}
 </div>
 
