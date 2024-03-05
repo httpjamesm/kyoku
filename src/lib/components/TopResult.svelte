@@ -15,7 +15,6 @@
 	export let type: Item;
 	export let artist: string;
 	export let year: number;
-	export let hasImage: boolean;
 
 	$: thumbnail = getItemThumbnail(albumId, 1024, 512);
 
