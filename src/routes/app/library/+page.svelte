@@ -38,9 +38,8 @@
 
 <style lang="scss">
 	.content {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
 		gap: 1rem;
 		padding-top: 1rem;
 	}
