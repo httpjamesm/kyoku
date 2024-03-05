@@ -7,7 +7,7 @@
 		"distDir": "../build"
 	},
 	"package": {
-		"productName": "kyoku",
+		"productName": "Kyoku",
 		"version": "0.1.0"
 	},
 	"tauri": {
@@ -21,7 +21,7 @@
 		},
 		"bundle": {
 			"active": true,
-			"category": "DeveloperTool",
+			"category": "Music",
 			"copyright": "",
 			"deb": {
 				"depends": []
@@ -34,7 +34,7 @@
 				"icons/icon.icns",
 				"icons/icon.ico"
 			],
-			"identifier": "com.tauri.dev",
+			"identifier": "space.httpjames.kyoku",
 			"longDescription": "",
 			"macOS": {
 				"entitlements": null,
@@ -64,7 +64,8 @@
 				"height": 600,
 				"resizable": true,
 				"title": "Kyoku",
-				"width": 800
+				"width": 930,
+				"minWidth": 930
 			}
 		]
 	}
