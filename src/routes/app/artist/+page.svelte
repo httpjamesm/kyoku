@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { getItemThumbnail } from '$lib/api/image';
-	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { getById, getArtistTopTracks, getArtistRecentAlbums } from '$lib/api/getMusic';
 	import QueueComponentButton from '$lib/components/QueueComponentButton.svelte';
@@ -11,6 +10,7 @@
 	import MdPlayArrow from 'svelte-icons/md/MdPlayArrow.svelte';
 	import { getQueueItemFromJellyfinItem } from '$lib/utils/queue';
 	import { queueStore } from '$lib/stores/queue';
+	import { playNow, addItemsNextInQueue, deleteFromQueueById } from '$lib/utils/queue';
 
 	let name = '';
 	let description = '';
@@ -82,6 +82,17 @@
 						itemId={item.Id}
 						ticks={item.RunTimeTicks}
 						isInQueue={false}
+						on:click={() => {
+							playNow(Item.SONG, item.Id);
+							const remainingSongs = topSongItems.slice(index + 1);
+							const remainingSongsQueueItems = remainingSongs.map((song) =>
+								getQueueItemFromJellyfinItem(song)
+							);
+							for (const song of remainingSongsQueueItems) {
+								deleteFromQueueById(song.id);
+							}
+							addItemsNextInQueue(remainingSongsQueueItems);
+						}}
 					/>
 					{#if index !== topSongItems.length}
 						<Divider />
