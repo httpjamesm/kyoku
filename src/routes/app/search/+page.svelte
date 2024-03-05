@@ -10,6 +10,8 @@
 	import { onMount } from 'svelte';
 	import { pushState } from '$app/navigation';
 
+	let loading = false;
+
 	let searchInput: TextInput;
 
 	let searchTerm = '';
@@ -19,10 +21,14 @@
 	$: songResults = results.filter((result) => result.Type === 'Audio');
 
 	const onSearchHandler = async () => {
+		loading = true;
 		try {
 			const items = await searchLibrary(searchTerm);
 			results = items;
-		} catch {}
+		} catch {
+		} finally {
+			loading = false;
+		}
 	};
 
 	onMount(() => {
@@ -35,17 +41,20 @@
 <div class="wrapper">
 	<div class="search-container">
 		<form on:submit|preventDefault={onSearchHandler}>
-			<TextInput
-				type="text"
-				id="search-input"
-				placeholder="Search for songs, albums, artists..."
-				bind:value={searchTerm}
-				bind:this={searchInput}
-				on:change={() => {
-					pushState(`/app/search?term=${searchTerm}`, {});
-				}}
-				required
-			/>
+			<div class="search-input-container" class:loading>
+				<TextInput
+					type="text"
+					id="search-input"
+					placeholder="Search for songs, albums, artists..."
+					bind:value={searchTerm}
+					bind:this={searchInput}
+					on:change={() => {
+						pushState(`/app/search?term=${searchTerm}`, {});
+					}}
+					disabled={loading}
+					required
+				/>
+			</div>
 		</form>
 		{#if results.length > 0}
 			<br />
@@ -95,6 +104,29 @@
 
 		.search-container {
 			width: 50rem;
+
+			.search-input-container {
+				width: 100%;
+				height: fit-content;
+				padding: 0.25rem;
+				box-sizing: border-box;
+				border-radius: 15px;
+				background-size: 200% 200%;
+
+				&.loading {
+					animation: jellyfin-loading 1s alternate infinite;
+				}
+			}
+		}
+	}
+
+	@keyframes jellyfin-loading {
+		0% {
+			background-color: #aa5cc3;
+		}
+
+		50% {
+			background-color: #00a4dc;
 		}
 	}
 </style>
