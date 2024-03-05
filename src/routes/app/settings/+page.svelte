@@ -24,10 +24,14 @@
 
 <SettingsSection name="Connectivity">
 	<Setting name="Server URL">
-		<TextInput id="server-url-input" bind:value={serverUrl} />
+		<TextInput id="server-url-input" bind:value={serverUrl} placeholder="https://server.com..." />
 	</Setting>
 	<Setting name="Backup Server URL">
-		<TextInput id="backup-server-url-input" bind:value={backupServerUrl} />
+		<TextInput
+			id="backup-server-url-input"
+			bind:value={backupServerUrl}
+			placeholder="https://server.com..."
+		/>
 	</Setting>
 </SettingsSection>
 
