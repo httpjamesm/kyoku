@@ -104,7 +104,7 @@
 		.track-menu-container {
 			height: 100%;
 			width: 50%;
-			padding: 0 3rem;
+			padding-left: 3rem;
 
 			.queue-container {
 				overflow-y: auto;
