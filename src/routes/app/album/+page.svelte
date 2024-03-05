@@ -12,6 +12,7 @@
 	import MdQueue from 'svelte-icons/md/MdQueue.svelte';
 	import { playNext } from '$lib/utils/queue';
 	import { deleteFromQueueById } from '$lib/utils/queue';
+	import FavouriteButton from '$lib/components/buttons/FavouriteButton.svelte';
 
 	let name = '';
 	let artists: string[] = [];
@@ -81,6 +82,7 @@
 				<InteractionButton type="secondary" on:click={onPlayNextHandler} icon={MdQueue}
 					>Play Next</InteractionButton
 				>
+				<FavouriteButton itemId={id} />
 			</div>
 		</div>
 	</div>

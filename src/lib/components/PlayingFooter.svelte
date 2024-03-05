@@ -8,58 +8,25 @@
 	import { playerContextKey } from '$lib/context/player';
 	import type { PlayerContextKey } from '$lib/context/player';
 	import { getContext } from 'svelte';
-	import { getUrl } from '$lib/api/url';
 	import { isPlayingStore } from '$lib/stores/playing';
 	import { playbackProgressStore } from '$lib/stores/playing';
 	import NowPlayingExpanded from './NowPlayingExpanded.svelte';
 	import TrackProgressBar from './TrackProgressBar.svelte';
-	import MdFavorite from 'svelte-icons/md/MdFavorite.svelte';
-	import MdFavoriteBorder from 'svelte-icons/md/MdFavoriteBorder.svelte';
 	import { queueStore } from '$lib/stores/queue';
-	import { getById } from '$lib/api/getMusic';
-	import { markFavourite, unmarkFavourite } from '$lib/api/favourite';
-	import toast from 'svelte-french-toast';
 	import { onDestroy } from 'svelte';
 	import type { QueueItem } from '$lib/stores/queue';
 	import { slide } from 'svelte/transition';
 	import IconButton from './buttons/IconButton.svelte';
 	import { getItemThumbnail } from '$lib/api/image';
+	import FavouriteButton from './buttons/FavouriteButton.svelte';
 
 	let showExpanded = false;
 
-	let favourite = false;
-
 	let currentQueueItem: QueueItem | null = null;
-
-	const checkFavourite = async () => {
-		if (!currentQueueItem) return;
-		const item = await getById(currentQueueItem.id);
-		favourite = item.UserData.IsFavorite;
-	};
 
 	$: if ($queueStore && $queueStore.items.length > $queueStore.currentIndex) {
 		currentQueueItem = $queueStore.items[$queueStore.currentIndex];
-		checkFavourite();
 	}
-
-	let favouriteLoading = false;
-
-	const onToggleFavouriteHandler = async () => {
-		if (!currentQueueItem) return;
-		favouriteLoading = true;
-		try {
-			if (favourite) {
-				await unmarkFavourite(currentQueueItem.id);
-			} else {
-				await markFavourite(currentQueueItem.id);
-			}
-			await checkFavourite();
-		} catch (e) {
-			toast.error((e as Error).message);
-		} finally {
-			favouriteLoading = false;
-		}
-	};
 
 	const { play, prev, pause, skip } = getContext<PlayerContextKey>(playerContextKey);
 
@@ -138,13 +105,7 @@
 				</p>
 			</div>
 			<div class="buttons">
-				<IconButton on:click={onToggleFavouriteHandler} loading={favouriteLoading}>
-					{#if favourite}
-						<MdFavorite />
-					{:else}
-						<MdFavoriteBorder />
-					{/if}
-				</IconButton>
+				<FavouriteButton itemId={currentQueueItem.id} />
 			</div>
 		{/if}
 	</div>
