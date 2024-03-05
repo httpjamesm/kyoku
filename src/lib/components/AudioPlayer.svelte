@@ -1,18 +1,15 @@
 <script lang="ts">
 	import { queueStore } from '$lib/stores/queue';
-	import { getUrl } from '$lib/api/url';
+	import { getStreamURLFromItemId } from '$lib/utils/stream';
 	import { onDestroy } from 'svelte';
 	import { isPlayingStore } from '$lib/stores/playing';
 	import type { QueueStore } from '$lib/stores/queue';
 	import { playbackProgressStore } from '$lib/stores/playing';
 	import { getItemThumbnail } from '$lib/api/image';
-	import {
-		reportPlayback,
-		reportFinishedPlayback,
-		reportPlaybackProgress
-	} from '$lib/api/playback';
+	import { reportFinishedPlayback, reportPlaybackProgress } from '$lib/api/playback';
 	import type { QueueItem } from '$lib/stores/queue';
 	import { getSetting } from '$lib/utils/settings';
+	import { onMount } from 'svelte';
 
 	let audioElement: HTMLAudioElement;
 	let nextAudioElement: HTMLAudioElement = new Audio();
@@ -32,48 +29,74 @@
 		}
 	}
 
-	function preloadNextTrack() {
+	const attachEventListeners = (element: HTMLAudioElement) => {
+		element.onplay = () => {
+			isPlayingStore.set(true);
+		};
+		element.onpause = () => {
+			isPlayingStore.set(false);
+		};
+		element.onended = handleTrackEnd;
+		element.ontimeupdate = updateTime;
+	};
+
+	const detachEventListeners = (element: HTMLAudioElement) => {
+		element.onplay = null;
+		element.onpause = null;
+		element.onended = null;
+		element.ontimeupdate = null;
+	};
+
+	const preloadNextTrack = () => {
 		const nextIndex = $queueStore.currentIndex + 1;
 		if (nextIndex < $queueStore.items.length) {
 			nextQueueItem = $queueStore.items[nextIndex];
 			updatePlayer(nextQueueItem, true); // Preload the next track
 		}
-	}
+	};
 
-	export function play() {
-		if (nextAudioElement.src && !nextAudioElement.paused) return;
+	export const play = () => {
+		// Ensure that before playing the current track, the next track is paused to avoid dual playback
+		if (isPlaying()) {
+			pause();
+			// Swap elements to ensure continuity.
+			[audioElement, nextAudioElement] = [nextAudioElement, audioElement];
+			detachEventListeners(nextAudioElement); // Detach listeners from what is now the nextAudioElement
+			attachEventListeners(audioElement); // Re-attach event listeners to the new current audio element
+		}
+
 		audioElement.play();
-	}
+	};
 
-	export function pause() {
+	export const pause = () => {
 		audioElement.pause();
-	}
+	};
 
-	export function isPlaying() {
+	export const isPlaying = () => {
 		return !audioElement.paused;
-	}
+	};
 
-	export function skip() {
+	export const skip = () => {
 		queueStore.update((store) => ({
 			...store,
 			currentIndex: Math.min(store.currentIndex + 1, store.items.length - 1)
 		}));
-	}
+	};
 
-	export function prev() {
+	export const prev = () => {
 		queueStore.update((store) => ({
 			...store,
 			currentIndex: Math.max(store.currentIndex - 1, 0)
 		}));
-	}
+	};
 
-	export function setProgress(percentage: number) {
+	export const setProgress = (percentage: number) => {
 		audioElement.currentTime = audioElement.duration * percentage;
-	}
+	};
 
 	let audioType = '';
 
-	function updatePlayer(track: QueueItem, isNext = false) {
+	const updatePlayer = (track: QueueItem, isNext = false) => {
 		if ('mediaSession' in navigator) {
 			navigator.mediaSession.metadata = new MediaMetadata({
 				title: track.name,
@@ -90,46 +113,36 @@
 
 		const targetElement = isNext ? nextAudioElement : audioElement;
 
-		targetElement.src = getSrcFromItemId(track.id);
+		if (!isNext && !targetElement.paused) {
+			targetElement.pause();
+		}
+
+		targetElement.src = getStreamURLFromItemId(track.id);
 		targetElement.load(); // Preload the track
 
 		if (!isNext) {
-			// Only attach event listeners to the current track
-			targetElement.oncanplaythrough = () => {
-				play();
-			};
-
-			targetElement.ontimeupdate = () => {
-				const currentTime = targetElement.currentTime;
-				if (currentQueueItem) {
-					reportPlaybackProgress(currentTime, currentQueueItem.id);
-				}
-				const duration = targetElement.duration;
-				const progress = (currentTime / duration) * 100;
-				playbackProgressStore.set(progress);
-			};
-
-			targetElement.onended = () => {
-				handleTrackEnd();
-			};
+			attachEventListeners(targetElement);
 		}
-	}
+	};
 
 	const handleTrackEnd = () => {
+		console.log('handling track end');
 		if (currentQueueItem) {
 			reportFinishedPlayback(currentQueueItem.id);
 		}
 
-		// Swapping logic remains the same but is encapsulated in a function
+		audioElement.pause();
+		detachEventListeners(audioElement);
 		[audioElement, nextAudioElement] = [nextAudioElement, audioElement];
 		[currentQueueItem, nextQueueItem] = [nextQueueItem, null];
+		attachEventListeners(audioElement);
 
-		preloadNextTrack(); // Preload the next track
+		preloadNextTrack();
 
-		play(); // Play the next track
+		play();
 	};
 
-	function isRelevantChange(prevState: QueueStore, currentState: QueueStore) {
+	const isRelevantChange = (prevState: QueueStore, currentState: QueueStore) => {
 		// Check if the current index has changed
 		if (prevState.currentIndex !== currentState.currentIndex) {
 			return true;
@@ -141,7 +154,17 @@
 			currentState.items[currentState.currentIndex]?.id;
 
 		return currentTrackChanged;
-	}
+	};
+
+	const updateTime = () => {
+		const currentTime = audioElement.currentTime;
+		if (currentQueueItem) {
+			reportPlaybackProgress(currentTime, currentQueueItem.id);
+		}
+		const duration = audioElement.duration;
+		const progress = (currentTime / duration) * 100;
+		playbackProgressStore.set(progress);
+	};
 
 	queueStore.subscribe(($queueStore) => {
 		if (!audioElement) return;
@@ -153,22 +176,12 @@
 			const currentQueueItem = currentQueueItems[currentIndex];
 			if (currentQueueItem) {
 				updatePlayer(currentQueueItem);
+				play();
 			}
 		}
 
 		previousQueueState = { items: [...currentQueueItems], currentIndex };
 	});
-
-	const getSrcFromItemId = (id: string) => {
-		let url = `${getUrl(false)}/Audio/${id}/universal?audioCodec=${getSetting('playback.audioCodec')}&api_key=${window.localStorage.getItem('accessToken')}&Container=mp3,aac,m4a|aac,m4b|aac,flac,alac,m4a|alac,m4b|alac,wav&StartTimeTicks=0`;
-
-		const quality = getSetting('playback.audioQuality');
-		if (quality !== 'auto') {
-			url += `&audioBitRate=${quality}`;
-		}
-
-		return url;
-	};
 
 	$: if (audioElement) {
 		audioElement.onended = () => {
@@ -181,7 +194,6 @@
 				return { ...store, currentIndex: nextIndex };
 			});
 
-			[audioElement, nextAudioElement] = [nextAudioElement, audioElement];
 			[nextQueueItem, currentQueueItem] = [null, nextQueueItem]; // Correctly update queue items
 
 			play();
@@ -201,29 +213,16 @@
 	}
 
 	onDestroy(() => {
-		if (audioElement) {
-			audioElement.oncanplaythrough = null;
-			audioElement.onended = null;
-		}
+		detachEventListeners(audioElement);
+		detachEventListeners(nextAudioElement);
+	});
+
+	onMount(() => {
+		attachEventListeners(audioElement);
 	});
 </script>
 
-<audio
-	style="display: none;"
-	bind:this={audioElement}
-	on:play={() => {
-		isPlayingStore.set(true);
-		if (currentQueueItem) {
-			reportPlayback(currentQueueItem.id, true);
-		}
-	}}
-	on:pause={() => {
-		isPlayingStore.set(false);
-		if (currentQueueItem) {
-			reportPlayback(currentQueueItem.id, false);
-		}
-	}}
->
+<audio style="display: none;" bind:this={audioElement}>
 	<source type={audioType} />
 	Your browser does not support the audio element.
 </audio>
