@@ -1,9 +1,12 @@
+import { getSetting } from '$lib/utils/settings';
 import { secondsToTicks } from '$lib/utils/ticks';
 import { Body, getClient } from '@tauri-apps/api/http';
 import { getHeaders } from './header';
 import { getUrl } from './url';
 
 export const reportPlayback = async (id: string, playing: boolean) => {
+	if (getSetting('account.incognito') === 'true') return;
+
 	const client = await getClient();
 
 	if (playing) {
@@ -18,6 +21,8 @@ export const reportPlayback = async (id: string, playing: boolean) => {
 };
 
 export const reportFinishedPlayback = async (id: string) => {
+	if (getSetting('account.incognito') === 'true') return;
+
 	const client = await getClient();
 
 	await client.post(`${getUrl(true)}/PlayedItems/${id}`, Body.text(''), {
@@ -26,6 +31,8 @@ export const reportFinishedPlayback = async (id: string) => {
 };
 
 export const reportPlaybackProgress = async (seconds: number, id: string) => {
+	if (getSetting('account.incognito') === 'true') return;
+
 	const ticks = secondsToTicks(seconds);
 
 	const client = await getClient();

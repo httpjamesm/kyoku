@@ -3,6 +3,9 @@ const defaultSettings = {
 		audioQuality: 'auto',
 		audioCodec: 'aac',
 		gapless: 'true'
+	},
+	account: {
+		incognito: 'false'
 	}
 };
 

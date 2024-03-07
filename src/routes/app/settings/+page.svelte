@@ -7,6 +7,7 @@
 	import InteractionButton from '$lib/components/buttons/InteractionButton.svelte';
 	import MdClearAll from 'svelte-icons/md/MdClearAll.svelte';
 	import { goto } from '$app/navigation';
+	import Toggle from '$lib/components/input/Toggle.svelte';
 
 	let audioQuality = getSetting('playback.audioQuality');
 	let audioCodec = getSetting('playback.audioCodec');
@@ -14,11 +15,14 @@
 	let serverUrl = getSetting('serverUrl');
 	let backupServerUrl = getSetting('backupServerUrl');
 
+	let incognito = getSetting('account.incognito') === 'true';
+
 	$: {
 		setSetting('playback.audioQuality', audioQuality);
 		setSetting('playback.audioCodec', audioCodec);
 		setSetting('serverUrl', serverUrl);
 		setSetting('backupServerUrl', backupServerUrl);
+		setSetting('account.incognito', incognito.toString());
 	}
 </script>
 
@@ -71,6 +75,12 @@
 				{ value: 'flac', label: 'FLAC' }
 			]}
 		/>
+	</Setting>
+</SettingsSection>
+
+<SettingsSection name="Account">
+	<Setting name="Incognito">
+		<Toggle id="incognito-toggle" bind:checked={incognito} />
 	</Setting>
 </SettingsSection>
 
