@@ -19,6 +19,7 @@
 	import IconButton from './buttons/IconButton.svelte';
 	import { getItemThumbnail } from '$lib/api/image';
 	import FavouriteButton from './buttons/FavouriteButton.svelte';
+	import ArtistList from './ArtistList.svelte';
 
 	let showExpanded = false;
 
@@ -99,7 +100,7 @@
 			<div class="details">
 				<p class="name">{currentQueueItem.name}</p>
 				<p class="metadata">
-					<a href="/app/artist?id={currentQueueItem.artistId}">{currentQueueItem.artist}</a> •
+					<ArtistList artists={currentQueueItem.artists} /> •
 					<a href="/app/album?id={currentQueueItem.albumId}">{currentQueueItem.album}</a>
 					• {currentQueueItem.year}
 				</p>
