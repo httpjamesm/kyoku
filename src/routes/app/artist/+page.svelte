@@ -119,11 +119,10 @@
 							itemId={item.Id}
 							albumId={item.Id}
 							name={item.Name}
-							artist={item.AlbumArtist}
+							artists={item.ArtistItems.map((item) => getArtistItemFromJellyfinArtistItem(item))}
 							album={item.Album}
 							year={item.ProductionYear}
 							type={Item.ALBUM}
-							artistId={item.ArtistId}
 						/>
 					{/each}
 				</div>
