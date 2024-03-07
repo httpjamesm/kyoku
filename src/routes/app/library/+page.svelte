@@ -31,7 +31,6 @@
 			year={item.ProductionYear}
 			type={Item.ALBUM}
 			favourite={item.UserData.IsFavorite}
-			artistId={item.AlbumArtists[0].Id}
 			artists={item.ArtistItems.map((item) => getArtistItemFromJellyfinArtistItem(item))}
 		/>
 	{/each}

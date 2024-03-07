@@ -51,7 +51,7 @@
 							}}
 							albumId={item.albumId}
 							name={item.name}
-							artist={item.artist}
+							artists={item.artists}
 							itemId={item.id}
 							ticks={item.ticks}
 							isInQueue

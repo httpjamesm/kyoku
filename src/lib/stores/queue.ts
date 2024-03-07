@@ -1,3 +1,4 @@
+import type { ArtistItem } from '$lib/interfaces/artist';
 import { writable } from 'svelte/store';
 
 export interface QueueStore {
@@ -8,7 +9,7 @@ export interface QueueStore {
 export interface QueueItem {
 	albumId: string;
 	name: string;
-	artist: string;
+	artists: ArtistItem[];
 	album: string;
 	year: number;
 	id: string;

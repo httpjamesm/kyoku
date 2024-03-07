@@ -8,6 +8,7 @@ import {
 import { Item } from '$lib/enums/item';
 import type { QueueItem, QueueStore } from '$lib/stores/queue';
 import { queueStore } from '$lib/stores/queue';
+import { getArtistItemFromJellyfinArtistItem } from './artist';
 
 export const getNewQueue = async (type: Item, id: string) => {
 	let items: any[] = [];
@@ -36,7 +37,7 @@ export const getQueueItemFromJellyfinItem = (item: any) => {
 		id: item.Id,
 		albumId: item.AlbumId,
 		name: item.Name,
-		artist: item.AlbumArtist,
+		artists: item.ArtistItems.map((item) => getArtistItemFromJellyfinArtistItem(item)),
 		album: item.Album,
 		year: item.ProductionYear,
 		ticks: item.RunTimeTicks,

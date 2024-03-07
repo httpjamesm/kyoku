@@ -19,7 +19,6 @@
 	export let album: string;
 	export let artists: ArtistItem[];
 	export let name: string;
-	export let artist: string;
 	export let year: number;
 	export let type: Item = Item.SONG;
 	export let favourite = false;
@@ -62,7 +61,7 @@
 				{
 					label: 'Go to artist',
 					event: () => {
-						goto(`/app/artist?id=${artistItems[0].id}`);
+						goto(`/app/artist?id=${artists[0].id}`);
 					}
 				},
 				{

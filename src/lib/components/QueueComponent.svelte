@@ -10,12 +10,14 @@
 	import { deleteFromQueueById } from '$lib/utils/queue';
 	import { showMenu } from 'tauri-plugin-context-menu';
 	import { goto } from '$app/navigation';
+	import type { ArtistItem } from '$lib/interfaces/artist';
+	import ArtistList from './ArtistList.svelte';
 
 	let playNowLoading = false;
 
 	export let albumId: string;
 	export let name: string;
-	export let artist: string;
+	export let artists: ArtistItem[] = [];
 	export let ticks = 0;
 	export let itemId: string;
 	export let isInQueue = true;
@@ -73,7 +75,7 @@
 				{name}
 			</p>
 			<p class="artist">
-				{artist}
+				<ArtistList {artists} />
 			</p>
 		</div>
 	</div>
