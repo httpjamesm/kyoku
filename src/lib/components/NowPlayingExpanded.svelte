@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 	import { getItemThumbnail } from '$lib/api/image';
 	import { queueStore } from '$lib/stores/queue';
 	import Divider from './Divider.svelte';
@@ -17,7 +17,7 @@
 	}
 </script>
 
-<div class="now-playing-expanded-container" transition:fade={{ duration: 250 }}>
+<div class="now-playing-expanded-container" transition:slide={{ duration: 250 }}>
 	{#if currentQueueItem}
 		<div class="thumbnail-container">
 			<img
@@ -71,7 +71,7 @@
 	.now-playing-expanded-container {
 		position: absolute;
 		z-index: 4;
-		top: 0;
+		bottom: 0;
 		left: 0;
 		height: 100vh;
 		width: 100%;
