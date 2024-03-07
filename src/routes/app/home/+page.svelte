@@ -51,7 +51,6 @@
 			itemId={item.Id}
 			albumId={item.AlbumId}
 			name={item.Name}
-			artist={item.AlbumArtist}
 			album={item.Album}
 			year={item.ProductionYear}
 			favourite={item.UserData.IsFavorite}
@@ -68,7 +67,6 @@
 			itemId={item.Id}
 			albumId={item.AlbumId}
 			name={item.Name}
-			artist={item.AlbumArtist}
 			album={item.Album}
 			year={item.ProductionYear}
 			artists={item.ArtistItems.map((item) => getArtistItemFromJellyfinArtistItem(item))}
@@ -84,7 +82,6 @@
 			itemId={item.Id}
 			albumId={item.Id}
 			name={item.Name}
-			artist={item.AlbumArtist}
 			album={item.Album}
 			year={item.ProductionYear}
 			type={Item.ALBUM}

@@ -4,6 +4,7 @@
 	import RectangularItem from '$lib/components/RectangularItem.svelte';
 	import { onMount } from 'svelte';
 	import { Item } from '$lib/enums/item';
+	import { getArtistItemFromJellyfinArtistItem } from '$lib/utils/artist';
 
 	let items: any = [];
 
@@ -26,12 +27,12 @@
 			itemId={item.Id}
 			albumId={item.Id}
 			name={item.Name}
-			artist={item.AlbumArtist}
 			album={item.Album}
 			year={item.ProductionYear}
 			type={Item.ALBUM}
 			favourite={item.UserData.IsFavorite}
 			artistId={item.AlbumArtists[0].Id}
+			artists={item.ArtistItems.map((item) => getArtistItemFromJellyfinArtistItem(item))}
 		/>
 	{/each}
 </div>
