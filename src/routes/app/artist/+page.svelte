@@ -11,6 +11,7 @@
 	import { getQueueItemFromJellyfinItem } from '$lib/utils/queue';
 	import { queueStore } from '$lib/stores/queue';
 	import { playNow, addItemsNextInQueue, deleteFromQueueById } from '$lib/utils/queue';
+	import { getArtistItemFromJellyfinArtistItem } from '$lib/utils/artist';
 
 	let name = '';
 	let description = '';
@@ -78,7 +79,7 @@
 					<QueueComponentButton
 						albumId={item.AlbumId}
 						name={item.Name}
-						artist={item.AlbumArtist}
+						artists={item.ArtistItems.map((item) => getArtistItemFromJellyfinArtistItem(item))}
 						itemId={item.Id}
 						ticks={item.RunTimeTicks}
 						isInQueue={false}
