@@ -27,7 +27,7 @@
 		genres = artist.Genres;
 
 		topSongItems = await getArtistTopTracks(id);
-		albums = await getArtistRecentAlbums(id);
+		albums = (await getArtistRecentAlbums(id)) || [];
 	};
 
 	$: id = $page.url.searchParams.get('id') as string;
@@ -110,21 +110,23 @@
 				</div>
 			</div>
 
-			<h3>Albums</h3>
-			<div class="row-wrap">
-				{#each albums as item (item.Id)}
-					<RectangularItem
-						itemId={item.Id}
-						albumId={item.Id}
-						name={item.Name}
-						artist={item.AlbumArtist}
-						album={item.Album}
-						year={item.ProductionYear}
-						type={Item.ALBUM}
-						artistId={item.ArtistId}
-					/>
-				{/each}
-			</div>
+			{#if albums.length > 0}
+				<h3>Albums</h3>
+				<div class="row-wrap">
+					{#each albums as item (item.Id)}
+						<RectangularItem
+							itemId={item.Id}
+							albumId={item.Id}
+							name={item.Name}
+							artist={item.AlbumArtist}
+							album={item.Album}
+							year={item.ProductionYear}
+							type={Item.ALBUM}
+							artistId={item.ArtistId}
+						/>
+					{/each}
+				</div>
+			{/if}
 		</div>
 	</div>
 {/if}
