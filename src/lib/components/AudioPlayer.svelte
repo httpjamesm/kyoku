@@ -56,15 +56,6 @@
 	};
 
 	export const play = () => {
-		// Ensure that before playing the current track, the next track is paused to avoid dual playback
-		if (isPlaying()) {
-			pause();
-			// Swap elements to ensure continuity.
-			[audioElement, nextAudioElement] = [nextAudioElement, audioElement];
-			detachEventListeners(nextAudioElement); // Detach listeners from what is now the nextAudioElement
-			attachEventListeners(audioElement); // Re-attach event listeners to the new current audio element
-		}
-
 		audioElement.play();
 	};
 
@@ -113,7 +104,7 @@
 
 		const targetElement = isNext ? nextAudioElement : audioElement;
 
-		if (!isNext && !targetElement.paused) {
+		if (!targetElement.paused) {
 			targetElement.pause();
 		}
 
@@ -126,16 +117,21 @@
 	};
 
 	const handleTrackEnd = () => {
-		console.log('handling track end');
 		if (currentQueueItem) {
 			reportFinishedPlayback(currentQueueItem.id);
 		}
 
-		audioElement.pause();
+		pause();
+
 		detachEventListeners(audioElement);
 		[audioElement, nextAudioElement] = [nextAudioElement, audioElement];
 		[currentQueueItem, nextQueueItem] = [nextQueueItem, null];
 		attachEventListeners(audioElement);
+
+		queueStore.update((store) => ({
+			...store,
+			currentIndex: store.currentIndex + 1
+		}));
 
 		preloadNextTrack();
 
@@ -182,35 +178,6 @@
 
 		previousQueueState = { items: [...currentQueueItems], currentIndex };
 	});
-
-	$: if (audioElement) {
-		audioElement.onended = () => {
-			if (currentQueueItem) {
-				reportFinishedPlayback(currentQueueItem.id);
-			}
-
-			queueStore.update((store) => {
-				const nextIndex = Math.min(store.currentIndex + 1, store.items.length - 1);
-				return { ...store, currentIndex: nextIndex };
-			});
-
-			[nextQueueItem, currentQueueItem] = [null, nextQueueItem]; // Correctly update queue items
-
-			play();
-
-			preloadNextTrack();
-		};
-
-		audioElement.ontimeupdate = () => {
-			const currentTime = audioElement.currentTime;
-			if (currentQueueItem) {
-				reportPlaybackProgress(currentTime, currentQueueItem.id);
-			}
-			const duration = audioElement.duration;
-			const progress = (currentTime / duration) * 100;
-			playbackProgressStore.set(progress);
-		};
-	}
 
 	onDestroy(() => {
 		detachEventListeners(audioElement);
