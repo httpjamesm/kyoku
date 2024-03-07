@@ -13,9 +13,12 @@
 	import { playNext } from '$lib/utils/queue';
 	import { deleteFromQueueById } from '$lib/utils/queue';
 	import FavouriteButton from '$lib/components/buttons/FavouriteButton.svelte';
+	import type { ArtistItem } from '$lib/interfaces/artist';
+	import { getArtistItemFromJellyfinArtistItem } from '$lib/utils/artist';
+	import ArtistList from '$lib/components/ArtistList.svelte';
 
 	let name = '';
-	let artists: string[] = [];
+	let artists: ArtistItem[] = [];
 	let year = 0;
 	let songItems: any[] = [];
 	let ticks = 0;
@@ -25,7 +28,7 @@
 			const albumItem = await getById(id);
 
 			name = albumItem.Name;
-			artists = albumItem.Artists;
+			artists = albumItem.ArtistItems.map((item: any) => getArtistItemFromJellyfinArtistItem(item));
 			year = albumItem.ProductionYear;
 			ticks = albumItem.RunTimeTicks;
 
@@ -70,7 +73,10 @@
 				<h2>{name}</h2>
 				<br />
 				<p class="details">
-					Album • {artists.join(', ')} • {year}
+					Album • {year}
+				</p>
+				<p class="details">
+					<ArtistList {artists} />
 				</p>
 				<br />
 				<p class="details">
@@ -102,7 +108,7 @@
 					itemId={item.Id}
 					albumId={item.AlbumId}
 					name={item.Name}
-					artists={item.Artists}
+					artists={item.ArtistItems.map((item) => getArtistItemFromJellyfinArtistItem(item))}
 					index={index + 1}
 					ticks={item.RunTimeTicks}
 					on:click={async () => {
@@ -123,6 +129,8 @@
 </div>
 
 <style lang="scss">
+	@import '$lib/styles/vars.scss';
+
 	.wrapper {
 		width: 100%;
 		padding: 3rem;
@@ -155,7 +163,7 @@
 
 					.details {
 						margin: 0;
-						color: #ececec;
+						color: $muted-color;
 					}
 				}
 

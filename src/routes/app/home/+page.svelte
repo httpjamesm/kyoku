@@ -6,6 +6,7 @@
 	import { Item } from '$lib/enums/item';
 	import CircularItem from '$lib/components/CircularItem.svelte';
 	import HomeSection from '$lib/components/home/HomeSection.svelte';
+	import { getArtistItemFromJellyfinArtistItem } from '$lib/utils/artist';
 
 	let recentlyPlayed: any[] = [];
 	let quickPicks: any[] = [];
@@ -54,7 +55,7 @@
 			album={item.Album}
 			year={item.ProductionYear}
 			favourite={item.UserData.IsFavorite}
-			artistId={item.AlbumArtists[0].Id}
+			artists={item.ArtistItems.map((item) => getArtistItemFromJellyfinArtistItem(item))}
 		/>
 	{/each}
 </HomeSection>
@@ -70,7 +71,7 @@
 			artist={item.AlbumArtist}
 			album={item.Album}
 			year={item.ProductionYear}
-			artistId={item.AlbumArtists[0].Id}
+			artists={item.ArtistItems.map((item) => getArtistItemFromJellyfinArtistItem(item))}
 		/>
 	{/each}
 </HomeSection>
@@ -87,7 +88,7 @@
 			album={item.Album}
 			year={item.ProductionYear}
 			type={Item.ALBUM}
-			artistId={item.ArtistId}
+			artists={item.ArtistItems.map((item) => getArtistItemFromJellyfinArtistItem(item))}
 		/>
 	{/each}
 </HomeSection>

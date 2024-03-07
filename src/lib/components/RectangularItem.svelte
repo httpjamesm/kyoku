@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { getUrl } from '$lib/api/url';
 	import { isPlayingStore } from '$lib/stores/playing';
 	import { queueStore } from '$lib/stores/queue';
 	import MdPlayArrow from 'svelte-icons/md/MdPlayArrow.svelte';
@@ -12,11 +11,13 @@
 	import { Item } from '$lib/enums/item';
 	import { goto } from '$app/navigation';
 	import { getItemThumbnail } from '$lib/api/image';
+	import type { ArtistItem } from '$lib/interfaces/artist';
+	import ArtistList from './ArtistList.svelte';
 
 	export let itemId: string;
 	export let albumId: string;
 	export let album: string;
-	export let artistId: string;
+	export let artists: ArtistItem[];
 	export let name: string;
 	export let artist: string;
 	export let year: number;
@@ -61,7 +62,7 @@
 				{
 					label: 'Go to artist',
 					event: () => {
-						goto(`/app/artist?id=${artistId}`);
+						goto(`/app/artist?id=${artistItems[0].id}`);
 					}
 				},
 				{
@@ -159,7 +160,7 @@
 	</div>
 	<div class="metadata">
 		<p class="name">{name}</p>
-		<p class="artist">{type[0].toUpperCase()}{type.slice(1)} • {artist}</p>
+		<p class="artist">{type[0].toUpperCase()}{type.slice(1)} • <ArtistList {artists} /></p>
 	</div>
 </button>
 

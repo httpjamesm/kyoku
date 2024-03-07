@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { formatMinutesShort, ticksToMinutes } from '$lib/utils/ticks';
 	import { queueStore } from '$lib/stores/queue';
+	import type { ArtistItem } from '$lib/interfaces/artist';
+	import ArtistList from './ArtistList.svelte';
 
 	export let itemId: string;
 	export let albumId: string;
 	export let name: string;
 	export let index: number;
-	export let artists: string[];
+	export let artists: ArtistItem[];
 	export let ticks: number;
 
 	$: currentInQueue =
@@ -26,7 +28,9 @@
 		{/if}
 	</td>
 	<td class="name">{name}</td>
-	<td>{artists.join(', ')}</td>
+	<td>
+		<ArtistList {artists} />
+	</td>
 	<td class="duration">{formatMinutesShort(ticksToMinutes(ticks))}</td>
 </tr>
 
