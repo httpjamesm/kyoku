@@ -176,7 +176,6 @@
 		all: unset;
 		cursor: pointer;
 
-		/* text-align: center; */
 		width: 10rem;
 
 		.metadata {
@@ -199,8 +198,9 @@
 		.image-container {
 			img {
 				height: 10rem;
-				object-fit: contain;
+				object-fit: cover;
 				border-radius: 10px;
+				width: 100%;
 			}
 
 			position: relative;

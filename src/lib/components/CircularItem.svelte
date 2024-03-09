@@ -43,8 +43,9 @@
 		.image-container {
 			img {
 				height: 10rem;
-				object-fit: contain;
+				object-fit: cover;
 				border-radius: 100%;
+				width: 100%;
 			}
 
 			position: relative;
