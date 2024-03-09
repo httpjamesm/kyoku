@@ -136,8 +136,6 @@
 				currentIndex: nextIndex
 			}));
 		}
-
-		play();
 	};
 
 	const isRelevantChange = (prevState: QueueStore, currentState: QueueStore) => {
@@ -179,7 +177,7 @@
 
 		// Only update the player if the track has ended or on initial load
 		if (isRelevantChange(previousQueueState, $queueStore)) {
-			const currentQueueItem = currentQueueItems[currentIndex];
+			currentQueueItem = currentQueueItems[currentIndex];
 			if (currentQueueItem) {
 				updatePlayer(currentQueueItem);
 				play();
