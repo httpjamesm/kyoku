@@ -20,8 +20,13 @@
 	import { getItemThumbnail } from '$lib/api/image';
 	import FavouriteButton from './buttons/FavouriteButton.svelte';
 	import ArtistList from './ArtistList.svelte';
+	import { page } from '$app/stores';
 
 	let showExpanded = false;
+
+	page.subscribe(() => {
+		showExpanded = false;
+	});
 
 	let currentQueueItem: QueueItem | null = null;
 
