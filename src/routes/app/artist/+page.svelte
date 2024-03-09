@@ -141,7 +141,7 @@
 			position: relative;
 			width: 100%;
 			background-size: cover;
-			height: 15rem;
+			height: 30rem;
 			border-top-right-radius: 10px;
 			border-top-left-radius: 10px;
 			background-position: center;
