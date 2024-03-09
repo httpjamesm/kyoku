@@ -160,6 +160,14 @@
 		const duration = audioElement.duration;
 		const progress = (currentTime / duration) * 100;
 		playbackProgressStore.set(progress);
+
+		if ('mediaSession' in navigator) {
+			navigator.mediaSession.setPositionState({
+				duration,
+				playbackRate: audioElement.playbackRate,
+				position: currentTime
+			});
+		}
 	};
 
 	queueStore.subscribe(($queueStore) => {
