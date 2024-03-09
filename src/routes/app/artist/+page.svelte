@@ -12,6 +12,7 @@
 	import { queueStore } from '$lib/stores/queue';
 	import { playNow, addItemsNextInQueue, deleteFromQueueById } from '$lib/utils/queue';
 	import { getArtistItemFromJellyfinArtistItem } from '$lib/utils/artist';
+	import { getArtistWikipedia } from '$lib/api/wikipedia/extracts';
 
 	let name = '';
 	let description = '';
@@ -25,6 +26,12 @@
 		const artist = await getById(id);
 		name = artist.Name;
 		description = artist.Overview;
+		if (!description) {
+			getArtistWikipedia(name).then((page) => {
+				if (!page) return;
+				description = page.extract;
+			});
+		}
 		genres = artist.Genres;
 
 		topSongItems = await getArtistTopTracks(id);
@@ -64,7 +71,9 @@
 					<h1>{name}</h1>
 					<h2>{genres.join(', ')}</h2>
 					{#if description}
-						<p>{description}</p>
+						<div class="description">
+							{@html description}
+						</div>
 					{/if}
 					<br />
 					<InteractionButton on:click={onPlayHandler} icon={MdPlayArrow}>Play</InteractionButton>
@@ -177,6 +186,14 @@
 					border-radius: 100%;
 					width: 10rem;
 					height: 10rem;
+				}
+
+				.metadata {
+					.description {
+						max-height: 10rem;
+						position: relative;
+						overflow-y: auto;
+					}
 				}
 
 				h1,
