@@ -28,7 +28,9 @@
 			const albumItem = await getById(id);
 
 			name = albumItem.Name;
-			artists = albumItem.ArtistItems.map((item: any) => getArtistItemFromJellyfinArtistItem(item));
+			artists = albumItem.AlbumArtists.map((item: any) =>
+				getArtistItemFromJellyfinArtistItem(item)
+			);
 			year = albumItem.ProductionYear;
 			ticks = albumItem.RunTimeTicks;
 
