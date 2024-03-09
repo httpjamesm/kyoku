@@ -13,6 +13,9 @@
 	import { primaryOrBackupServerConnectivity } from '$lib/api/url';
 	import { navigating } from '$app/stores';
 	import { queueStore } from '$lib/stores/queue';
+	import { songColourStore } from '$lib/stores/colours';
+
+	$: blobColour = $songColourStore || 'blue';
 
 	let menuItems = [
 		{
@@ -98,7 +101,7 @@
 </script>
 
 <div class="blob-container">
-	<div class="blob" />
+	<div class="blob" style="box-shadow: 0 0 250px 10rem {blobColour};" />
 </div>
 
 <div class="content">
@@ -231,6 +234,5 @@
 		top: 0;
 		left: 0;
 		width: 15rem;
-		box-shadow: 0 0 250px 10rem blue;
 	}
 </style>

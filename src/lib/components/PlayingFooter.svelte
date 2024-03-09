@@ -21,6 +21,11 @@
 	import FavouriteButton from './buttons/FavouriteButton.svelte';
 	import ArtistList from './ArtistList.svelte';
 	import { page } from '$app/stores';
+	import { FastAverageColor } from 'fast-average-color';
+	import { songColourStore } from '$lib/stores/colours';
+	import { isColorTooDark, increaseBrightness } from '$lib/utils/colour';
+
+	let thumbnailElement: HTMLImageElement;
 
 	let showExpanded = false;
 
@@ -44,6 +49,7 @@
 
 	onDestroy(() => {
 		window.removeEventListener('keydown', checkShortcut);
+		fac.destroy();
 	});
 
 	let thumbnail = '';
@@ -51,6 +57,8 @@
 	$: if (currentQueueItem) {
 		thumbnail = getItemThumbnail(currentQueueItem.id, 96, 96);
 	}
+
+	const fac = new FastAverageColor();
 </script>
 
 {#if showExpanded}
@@ -100,7 +108,26 @@
 				on:error={() => {
 					thumbnail = '/icons/unknown-track.webp';
 				}}
+				bind:this={thumbnailElement}
 				alt="{currentQueueItem.name} album art"
+				crossorigin="anonymous"
+				on:load={() => {
+					fac
+						.getColorAsync(thumbnailElement, {
+							algorithm: 'dominant'
+						})
+						.then((colour) => {
+							const detectedColour = colour.hex;
+
+							let finalColour = detectedColour;
+
+							if (isColorTooDark(detectedColour)) {
+								finalColour = increaseBrightness(finalColour, 50);
+							}
+
+							songColourStore.set(finalColour);
+						});
+				}}
 			/>
 			<div class="details">
 				<p class="name">{currentQueueItem.name}</p>

@@ -3,6 +3,7 @@
 	import { playerContextKey } from '$lib/context/player';
 	import type { PlayerContextKey } from '$lib/context/player';
 	import { onMount, onDestroy } from 'svelte';
+	import { songColourStore } from '$lib/stores/colours';
 
 	export let progress = 0;
 
@@ -15,6 +16,8 @@
 	$: lastMovedPositionPercentage = progress;
 
 	let progressBarContainer: HTMLDivElement;
+
+	$: trackColour = $songColourStore || '#c957ff';
 
 	const handleMouseMove = (e: MouseEvent) => {
 		if (!clicking) return;
@@ -62,12 +65,15 @@
 	tabindex="-1"
 	bind:this={progressBarContainer}
 >
-	<hr class="progress-bar" style="width: {lastMovedPositionPercentage}%" />
+	<hr
+		class="progress-bar"
+		style="width: {lastMovedPositionPercentage}%; border-color: {trackColour}"
+	/>
 	<div class="dot-container">
 		<div
 			class="dot"
 			class:enlarged={hoveringOverBar}
-			style="left: {lastMovedPositionPercentage}%;"
+			style="left: {lastMovedPositionPercentage}%; background-color: {trackColour}"
 		/>
 	</div>
 </div>
@@ -91,7 +97,6 @@
 			.dot {
 				height: 10px;
 				width: 10px;
-				background-color: #c957ff;
 				position: absolute;
 				border-radius: 100%;
 
@@ -106,7 +111,8 @@
 		.progress-bar {
 			position: absolute;
 			left: 0;
-			border: 2px solid #c957ff;
+			border-style: solid;
+			border-width: 2px;
 		}
 	}
 </style>

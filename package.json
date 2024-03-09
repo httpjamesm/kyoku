@@ -35,6 +35,7 @@
 	"type": "module",
 	"dependencies": {
 		"@tauri-apps/api": "^1.5.3",
+		"fast-average-color": "^9.4.0",
 		"svelte-dnd-action": "^0.9.40",
 		"svelte-french-toast": "^1.2.0",
 		"svelte-icons": "^2.1.0",
