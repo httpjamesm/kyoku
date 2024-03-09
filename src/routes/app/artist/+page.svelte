@@ -13,6 +13,7 @@
 	import { playNow, addItemsNextInQueue, deleteFromQueueById } from '$lib/utils/queue';
 	import { getArtistItemFromJellyfinArtistItem } from '$lib/utils/artist';
 	import { getArtistWikipedia } from '$lib/api/wikipedia/extracts';
+	import { getSetting } from '$lib/utils/settings';
 
 	let name = '';
 	let description = '';
@@ -26,7 +27,7 @@
 		const artist = await getById(id);
 		name = artist.Name;
 		description = artist.Overview;
-		if (!description) {
+		if (!description && getSetting('metadata.wikipedia') === 'true') {
 			getArtistWikipedia(name).then((page) => {
 				if (!page) return;
 				description = page.extract;

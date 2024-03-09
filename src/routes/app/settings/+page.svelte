@@ -17,12 +17,15 @@
 
 	let incognito = getSetting('account.incognito') === 'true';
 
+	let wikipedia = getSetting('metadata.wikipedia') === 'true';
+
 	$: {
 		setSetting('playback.audioQuality', audioQuality);
 		setSetting('playback.audioCodec', audioCodec);
 		setSetting('serverUrl', serverUrl);
 		setSetting('backupServerUrl', backupServerUrl);
 		setSetting('account.incognito', incognito.toString());
+		setSetting('metadata.wikipedia', wikipedia.toString());
 	}
 </script>
 
@@ -36,6 +39,12 @@
 			bind:value={backupServerUrl}
 			placeholder="https://server.com..."
 		/>
+	</Setting>
+</SettingsSection>
+
+<SettingsSection name="Metadata">
+	<Setting name="Supplement from Wikipedia">
+		<Toggle id="wikipedia-toggle" bind:checked={wikipedia} />
 	</Setting>
 </SettingsSection>
 

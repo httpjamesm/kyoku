@@ -6,6 +6,9 @@ const defaultSettings = {
 	},
 	account: {
 		incognito: 'false'
+	},
+	metadata: {
+		wikipedia: 'true'
 	}
 };
 
