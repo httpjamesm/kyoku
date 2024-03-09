@@ -45,6 +45,7 @@
 		element.onpause = null;
 		element.onended = null;
 		element.ontimeupdate = null;
+		element.onloadeddata = null;
 	};
 
 	const preloadNextTrack = () => {
@@ -55,8 +56,12 @@
 		}
 	};
 
-	export const play = () => {
-		audioElement.play();
+	export const play = async () => {
+		audioElement.play().catch(() => {
+			audioElement.onloadeddata = () => {
+				play();
+			};
+		});
 	};
 
 	export const pause = () => {
@@ -103,10 +108,13 @@
 		audioType = `audio/${getSetting('playback.audioCodec')}`;
 
 		const targetElement = isNext ? nextAudioElement : audioElement;
+		const previousElement = isNext ? audioElement : nextAudioElement;
 
 		if (!targetElement.paused) {
 			targetElement.pause();
 		}
+
+		previousElement.pause();
 
 		targetElement.src = getStreamURLFromItemId(track.id);
 		targetElement.load(); // Preload the track
@@ -180,6 +188,7 @@
 			currentQueueItem = currentQueueItems[currentIndex];
 			if (currentQueueItem) {
 				updatePlayer(currentQueueItem);
+				console.log('updating player');
 				play();
 			}
 		}
@@ -188,6 +197,8 @@
 	});
 
 	onDestroy(() => {
+		if (audioElement) audioElement.pause();
+		if (nextAudioElement) nextAudioElement.pause();
 		detachEventListeners(audioElement);
 		detachEventListeners(nextAudioElement);
 	});
