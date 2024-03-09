@@ -86,6 +86,8 @@
 	<NowPlayingExpanded {currentQueueItem} />
 {/if}
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
 <footer
 	transition:slide
 	class="footer"
@@ -129,7 +131,7 @@
 				on:error={() => {
 					thumbnailTries = thumbnailTries + 1;
 
-					if (thumbnailTries > 2 || !currentQueueItem) {
+					if (thumbnailTries >= 2 || !currentQueueItem) {
 						thumbnail = '/icons/unknown-track.webp';
 						return;
 					}
