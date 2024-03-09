@@ -12,6 +12,7 @@
 	import { goto } from '$app/navigation';
 	import type { ArtistItem } from '$lib/interfaces/artist';
 	import ArtistList from './ArtistList.svelte';
+	import FavouriteButton from './buttons/FavouriteButton.svelte';
 
 	let playNowLoading = false;
 
@@ -83,6 +84,9 @@
 		<p class="runtime">
 			{formatMinutesShort(ticksToMinutes(ticks))}
 		</p>
+
+		<FavouriteButton {itemId} />
+
 		<IconButton
 			loading={playNowLoading}
 			on:click={(e) => {
