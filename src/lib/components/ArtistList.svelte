@@ -8,6 +8,7 @@
 {#each artists as artist, index (artist.id)}
 	<a
 		href={null}
+		style="cursor: pointer;"
 		class="item-reference-link"
 		on:click|stopPropagation={() => {
 			goto(`/app/artist?id=${artist.id}`);
