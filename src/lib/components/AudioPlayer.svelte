@@ -88,10 +88,10 @@
 	let audioType = '';
 
 	const updatePlayer = (track: QueueItem, isNext = false) => {
-		if ('mediaSession' in navigator) {
+		if (!isNext && 'mediaSession' in navigator) {
 			navigator.mediaSession.metadata = new MediaMetadata({
 				title: track.name,
-				artist: track.artist,
+				artist: track.artists.map((artist) => artist.name).join(', '),
 				album: track.album,
 				artwork: [
 					{ src: getItemThumbnail(track.albumId, 96, 96), sizes: '96x96', type: 'image/jpeg' },
