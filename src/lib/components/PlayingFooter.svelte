@@ -33,6 +33,12 @@
 		showExpanded = false;
 	});
 
+	$: if (showExpanded) {
+		window.addEventListener('keydown', checkShortcut);
+	} else {
+		window.removeEventListener('keydown', checkShortcut);
+	}
+
 	let currentQueueItem: QueueItem | null = null;
 
 	$: if ($queueStore && $queueStore.items.length > $queueStore.currentIndex) {
@@ -160,7 +166,6 @@
 		<IconButton
 			on:click={() => {
 				showExpanded = !showExpanded;
-				window.addEventListener('keydown', checkShortcut);
 			}}
 		>
 			{#if !showExpanded}
