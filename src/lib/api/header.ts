@@ -7,7 +7,7 @@ export const getHeaders = async () => {
 
 	try {
 		version = await getVersion();
-	} catch { }
+	} catch {}
 
 	let deviceId = window.localStorage.getItem('deviceId');
 
@@ -16,8 +16,10 @@ export const getHeaders = async () => {
 		window.localStorage.setItem('deviceId', deviceId);
 	}
 
+	const hostname = window.localStorage.getItem('hostname');
+
 	let headers = {
-		'X-Emby-Authorization': `MediaBrowser Client="kyoku", Device="Computer", DeviceId="${deviceId}", Version="${version}"${token ? `, Token="${token}"` : ''}`
+		'X-Emby-Authorization': `MediaBrowser Client="kyoku", Device="${hostname}", DeviceId="${deviceId}", Version="${version}"${token ? `, Token="${token}"` : ''}`
 	};
 
 	return headers;
