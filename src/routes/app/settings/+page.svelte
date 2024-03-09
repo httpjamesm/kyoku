@@ -81,7 +81,8 @@
 			options={[
 				{ value: 'mp3', label: 'MP3' },
 				{ value: 'aac', label: 'AAC' },
-				{ value: 'flac', label: 'FLAC' }
+				{ value: 'flac', label: 'FLAC' },
+				{ value: 'ogg', label: 'OGG' }
 			]}
 		/>
 	</Setting>
