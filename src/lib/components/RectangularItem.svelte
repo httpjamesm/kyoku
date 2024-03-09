@@ -90,7 +90,8 @@
 		});
 	};
 
-	let albumArt = getItemThumbnail(itemId);
+	let thumbnail = getItemThumbnail(itemId);
+	let thumbnailTries = 0;
 </script>
 
 <button
@@ -112,10 +113,17 @@
 >
 	<div class="image-container">
 		<img
-			src={albumArt}
+			src={thumbnail}
 			alt="{name} album art"
 			on:error={() => {
-				albumArt = '/icons/unknown-track.webp';
+				thumbnailTries += 1;
+
+				if (thumbnailTries >= 2) {
+					thumbnail = '/icons/unknown-track.webp';
+					return;
+				}
+
+				thumbnail = getItemThumbnail(albumId);
 			}}
 		/>
 		{#if hovering || currentInQueue}

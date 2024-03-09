@@ -52,6 +52,7 @@
 		fac.destroy();
 	});
 
+	let thumbnailTries = 0;
 	let thumbnail = '';
 
 	$: if (currentQueueItem) {
@@ -126,7 +127,14 @@
 			<img
 				src={thumbnail}
 				on:error={() => {
-					thumbnail = '/icons/unknown-track.webp';
+					thumbnailTries = thumbnailTries + 1;
+
+					if (thumbnailTries > 2 || !currentQueueItem) {
+						thumbnail = '/icons/unknown-track.webp';
+						return;
+					}
+
+					thumbnail = getItemThumbnail(currentQueueItem.albumId, 96, 96);
 				}}
 				bind:this={thumbnailElement}
 				alt="{currentQueueItem.name} album art"
