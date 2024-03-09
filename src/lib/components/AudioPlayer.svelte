@@ -128,12 +128,14 @@
 		[currentQueueItem, nextQueueItem] = [nextQueueItem, null];
 		attachEventListeners(audioElement);
 
-		queueStore.update((store) => ({
-			...store,
-			currentIndex: store.currentIndex + 1
-		}));
-
-		preloadNextTrack();
+		const nextIndex = $queueStore.currentIndex + 1;
+		if (nextIndex < $queueStore.items.length) {
+			currentQueueItem = $queueStore.items[nextIndex];
+			queueStore.update((store) => ({
+				...store,
+				currentIndex: nextIndex
+			}));
+		}
 
 		play();
 	};
