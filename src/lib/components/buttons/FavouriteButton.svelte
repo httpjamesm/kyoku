@@ -16,7 +16,9 @@
 		favourite = item.UserData.IsFavorite;
 	};
 
-	const onToggleFavouriteHandler = async () => {
+	const onToggleFavouriteHandler = async (e: Event) => {
+		e.stopPropagation();
+
 		loading = true;
 		try {
 			if (favourite) {
