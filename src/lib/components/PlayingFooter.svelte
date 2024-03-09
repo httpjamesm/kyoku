@@ -59,6 +59,26 @@
 	}
 
 	const fac = new FastAverageColor();
+
+	const onThumbnailLoad = async () => {
+		try {
+			const dominantColour = await fac.getColorAsync(thumbnailElement, {
+				algorithm: 'dominant'
+			});
+
+			const detectedColour = dominantColour.hex;
+
+			let finalColour = detectedColour;
+
+			if (isColorTooDark(detectedColour)) {
+				finalColour = increaseBrightness(finalColour, 50);
+			}
+
+			songColourStore.set(finalColour);
+		} catch {
+			songColourStore.set(null);
+		}
+	};
 </script>
 
 {#if showExpanded}
@@ -111,23 +131,7 @@
 				bind:this={thumbnailElement}
 				alt="{currentQueueItem.name} album art"
 				crossorigin="anonymous"
-				on:load={() => {
-					fac
-						.getColorAsync(thumbnailElement, {
-							algorithm: 'dominant'
-						})
-						.then((colour) => {
-							const detectedColour = colour.hex;
-
-							let finalColour = detectedColour;
-
-							if (isColorTooDark(detectedColour)) {
-								finalColour = increaseBrightness(finalColour, 50);
-							}
-
-							songColourStore.set(finalColour);
-						});
-				}}
+				on:load={onThumbnailLoad}
 			/>
 			<div class="details">
 				<p class="name">{currentQueueItem.name}</p>
