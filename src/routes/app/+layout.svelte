@@ -132,7 +132,9 @@
 			</div>
 		</header>
 
-		<slot />
+		<div class="view">
+			<slot />
+		</div>
 
 		{#if $queueStore?.items.length > 0}
 			<PlayingFooter />
@@ -158,6 +160,12 @@
 			box-sizing: border-box;
 			color: white;
 			min-height: 100vh;
+
+			.view {
+				position: relative;
+				height: 100%;
+				width: 100%;
+			}
 
 			.header {
 				width: 100%;

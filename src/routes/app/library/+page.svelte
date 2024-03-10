@@ -5,6 +5,10 @@
 	import { onMount } from 'svelte';
 	import { Item } from '$lib/enums/item';
 	import { getArtistItemFromJellyfinArtistItem } from '$lib/utils/artist';
+	import InteractionButton from '$lib/components/buttons/InteractionButton.svelte';
+	import MdShuffle from 'svelte-icons/md/MdShuffle.svelte';
+	import { getShuffledLibrarySongs } from '$lib/api/getMusic';
+	import { setQueue, getQueueItemFromJellyfinItem } from '$lib/utils/queue';
 
 	let items: any = [];
 
@@ -19,8 +23,20 @@
 	onMount(() => {
 		init();
 	});
+
+	const shuffleHandler = async () => {
+		try {
+			const songs = await getShuffledLibrarySongs();
+			const queueItems = songs.map((song) => getQueueItemFromJellyfinItem(song));
+			setQueue(queueItems);
+		} catch (e) {
+			toast.error((e as Error).message);
+		}
+	};
 </script>
 
+<br />
+<InteractionButton icon={MdShuffle} on:click={shuffleHandler}>Shuffle</InteractionButton>
 <div class="content">
 	{#each items as item (item.Id)}
 		<RectangularItem

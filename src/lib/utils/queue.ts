@@ -98,6 +98,13 @@ export const playNow = async (type: Item, id: string) => {
 	});
 };
 
+export const setQueue = async (items: QueueItem[]) => {
+	queueStore.set({
+		currentIndex: 0,
+		items
+	});
+};
+
 const removeDuplicatesFromJellyfinItems = (items: any[]) => {
 	const seenIds: { [key: string]: boolean } = {};
 	const uniqueItems = items.filter((item: any) => {

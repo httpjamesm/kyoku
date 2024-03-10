@@ -56,6 +56,24 @@ export const getLibrary = async (sort = 'DateCreated', order = 'Descending') => 
 	return (res.data as any).Items;
 };
 
+export const getShuffledLibrarySongs = async () => {
+	const client = await getClient();
+
+	const res = await client.get(`${getUrl(true)}/Items`, {
+		headers: await getHeaders(),
+		query: {
+			ParentId: window.localStorage.getItem('libraryId') as string,
+			Filters: 'IsNotFolder',
+			SortBy: 'Random',
+			IncludeItemTypes: 'Audio',
+			Limit: '300',
+			Recursive: 'true'
+		}
+	});
+
+	return (res.data as any).Items;
+};
+
 export const searchLibrary = async (term: string) => {
 	const client = await getClient();
 
