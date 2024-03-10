@@ -9,7 +9,6 @@
 	import { reportFinishedPlayback, reportPlaybackProgress } from '$lib/api/playback';
 	import type { QueueItem } from '$lib/stores/queue';
 	import { getSetting } from '$lib/utils/settings';
-	import { onMount } from 'svelte';
 
 	let audioElement: HTMLAudioElement;
 	let nextAudioElement: HTMLAudioElement = new Audio();
@@ -58,8 +57,12 @@
 
 	export const play = async () => {
 		audioElement.play().catch(() => {
+			console.log('play failed - falling back to onloadeddata handler');
 			audioElement.onloadeddata = () => {
-				play();
+				play().then(() => {
+					console.log('resetting onloadeddata');
+					audioElement.onloadeddata = null;
+				});
 			};
 		});
 	};
@@ -201,10 +204,6 @@
 		if (nextAudioElement) nextAudioElement.pause();
 		detachEventListeners(audioElement);
 		detachEventListeners(nextAudioElement);
-	});
-
-	onMount(() => {
-		attachEventListeners(audioElement);
 	});
 </script>
 
