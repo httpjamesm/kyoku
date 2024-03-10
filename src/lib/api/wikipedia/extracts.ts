@@ -3,16 +3,15 @@ import { Body, getClient, ResponseType } from '@tauri-apps/api/http';
 export const getArtistWikipedia = async (name: string) => {
 	const client = await getClient();
 
-	const variations = [name, toSentenceCase(name), name.toLowerCase(), name.toUpperCase()];
+	const variations = [toSentenceCase(name), name, name.toLowerCase(), name.toUpperCase()];
+	const allVariations =
+		variations.join('|') + '|' + variations.map((variation) => variation + ' (musician)').join('|');
 
 	const res = await client.get('https://en.wikipedia.org/w/api.php', {
 		query: {
 			action: 'query',
 			format: 'json',
-			titles:
-				variations.join('|') +
-				'|' +
-				variations.map((variation) => variation + ' (musician)').join('|'),
+			titles: allVariations,
 			prop: 'extracts',
 			exintro: 'True'
 		},
@@ -72,5 +71,13 @@ export const getWikipedia = async (title: string) => {
 };
 
 const toSentenceCase = (text: string): string => {
-	return text[0].toUpperCase() + text.slice(1);
+	const words = text.split(' ');
+	if (words.length === 1) {
+		text = text.toLowerCase();
+		return text[0].toUpperCase() + text.slice(1);
+	}
+
+	const newWords = words.map((word) => toSentenceCase(word));
+
+	return newWords.join(' ');
 };
