@@ -1,4 +1,5 @@
 {
+	"$schema": "../gen/schemas/desktop-schema.json",
 	"identifier": "migrated",
 	"description": "permissions that were migrated from v1",
 	"local": true,
@@ -10,7 +11,10 @@
 		"app:default",
 		"resources:default",
 		"menu:default",
-		"tray:default"
-	],
-	"urls": ["*"]
+		"tray:default",
+		{
+			"identifier": "http:default",
+			"allow": [{ "url": "http://*" }, { "url": "https://*" }]
+		}
+	]
 }
