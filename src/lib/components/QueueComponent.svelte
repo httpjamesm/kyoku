@@ -8,7 +8,7 @@
 	import { Item } from '$lib/enums/item';
 	import IconButton from './buttons/IconButton.svelte';
 	import { deleteFromQueueById } from '$lib/utils/queue';
-	import { showMenu } from 'tauri-plugin-context-menu';
+	// import { showMenu } from 'tauri-plugin-context-menu';
 	import { goto } from '$app/navigation';
 	import type { ArtistItem } from '$lib/interfaces/artist';
 	import ArtistList from './ArtistList.svelte';
@@ -26,16 +26,16 @@
 	let thumbnail = getItemThumbnail(albumId, 128, 128);
 
 	const onContextMenu = () => {
-		showMenu({
-			items: [
-				{
-					label: 'Go to album',
-					event: () => {
-						goto(`/app/album?id=${albumId}`);
-					}
-				}
-			]
-		});
+		// showMenu({
+		// 	items: [
+		// 		{
+		// 			label: 'Go to album',
+		// 			event: () => {
+		// 				goto(`/app/album?id=${albumId}`);
+		// 			}
+		// 		}
+		// 	]
+		// });
 	};
 </script>
 

@@ -1,5 +1,5 @@
 import { setSetting } from '$lib/utils/settings';
-import { getClient } from '@tauri-apps/api/http';
+import { fetch } from '@tauri-apps/plugin-http';
 
 export const getUrl = (userSpecific: boolean = false) => {
 	const serverUrl =
@@ -19,14 +19,17 @@ export const getUrl = (userSpecific: boolean = false) => {
 };
 
 const checkServerConnection = async (primary: boolean) => {
-	const client = await getClient();
-
 	const serverUrl = window.localStorage.getItem(
 		primary ? 'serverUrl' : 'backupServerUrl'
 	) as string;
 
-	await client.get(`${serverUrl}/Users/${window.localStorage.getItem('userId')}`, {
-		timeout: 3
+	await fetch(`${serverUrl}/Users/${window.localStorage.getItem('userId')}`, {
+		headers: {
+			'content-type': 'application/json'
+		},
+		body: JSON.stringify({
+			timeout: 3
+		})
 	});
 };
 

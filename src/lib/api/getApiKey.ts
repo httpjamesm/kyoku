@@ -1,26 +1,24 @@
-import { Body, getClient, ResponseType } from '@tauri-apps/api/http';
+import { fetch } from '@tauri-apps/plugin-http';
 import { getHeaders } from './header';
 
-export default async function(username: string, password: string) {
-	const client = await getClient();
-
+export default async function (username: string, password: string) {
 	const serverUrl = window.localStorage.getItem('serverUrl') as string;
 
-	const res = await client.post(
-		`${serverUrl}/Users/AuthenticateByName`,
-		Body.json({
+	const res = await fetch(`${serverUrl}/Users/AuthenticateByName`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			...(await getHeaders())
+		},
+		body: JSON.stringify({
 			Username: username,
 			Pw: password
-		}),
-		{
-			headers: await getHeaders(),
-			responseType: ResponseType.JSON
-		}
-	);
+		})
+	});
 
 	if (!res.ok) {
 		throw new Error('Login failed');
 	}
 
-	return res.data as any;
+	return (await res.json()) as any;
 }

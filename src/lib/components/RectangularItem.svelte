@@ -4,7 +4,7 @@
 	import MdPlayArrow from 'svelte-icons/md/MdPlayArrow.svelte';
 	import MdPause from 'svelte-icons/md/MdPause.svelte';
 	import { fade } from 'svelte/transition';
-	import { showMenu } from 'tauri-plugin-context-menu';
+	// import { showMenu } from 'tauri-plugin-context-menu';
 	import { markFavourite, unmarkFavourite } from '$lib/api/favourite';
 	import toast from 'svelte-french-toast';
 	import { getNewQueue, playNext } from '$lib/utils/queue';
@@ -43,51 +43,51 @@
 	};
 
 	const onContextMenu = () => {
-		showMenu({
-			items: [
-				{
-					label: 'Play next',
-					event: playNextHandler
-				},
-				{
-					is_separator: true
-				},
-				{
-					label: 'Go to album',
-					event: () => {
-						goto(`/app/album?id=${albumId}`);
-					}
-				},
-				{
-					label: 'Go to artist',
-					event: () => {
-						goto(`/app/artist?id=${artists[0].id}`);
-					}
-				},
-				{
-					is_separator: true
-				},
-				{
-					label: 'Favourite',
-					checked: favourite,
-					event: async () => {
-						favourite = !favourite;
-						try {
-							if (!favourite) {
-								unmarkFavourite(itemId);
-							} else {
-								markFavourite(itemId);
-							}
-						} catch (e) {
-							favourite = !favourite;
-							// @ts-ignore
-							toast.error(e.message);
-							return;
-						}
-					}
-				}
-			]
-		});
+		// showMenu({
+		// 	items: [
+		// 		{
+		// 			label: 'Play next',
+		// 			event: playNextHandler
+		// 		},
+		// 		{
+		// 			is_separator: true
+		// 		},
+		// 		{
+		// 			label: 'Go to album',
+		// 			event: () => {
+		// 				goto(`/app/album?id=${albumId}`);
+		// 			}
+		// 		},
+		// 		{
+		// 			label: 'Go to artist',
+		// 			event: () => {
+		// 				goto(`/app/artist?id=${artists[0].id}`);
+		// 			}
+		// 		},
+		// 		{
+		// 			is_separator: true
+		// 		},
+		// 		{
+		// 			label: 'Favourite',
+		// 			checked: favourite,
+		// 			event: async () => {
+		// 				favourite = !favourite;
+		// 				try {
+		// 					if (!favourite) {
+		// 						unmarkFavourite(itemId);
+		// 					} else {
+		// 						markFavourite(itemId);
+		// 					}
+		// 				} catch (e) {
+		// 					favourite = !favourite;
+		// 					// @ts-ignore
+		// 					toast.error(e.message);
+		// 					return;
+		// 				}
+		// 			}
+		// 		}
+		// 	]
+		// });
 	};
 
 	let thumbnail = getItemThumbnail(itemId);

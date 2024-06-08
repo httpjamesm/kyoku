@@ -1,11 +1,10 @@
-import { Body, getClient } from '@tauri-apps/api/http';
+import { fetch } from '@tauri-apps/plugin-http';
 import { getHeaders } from './header';
 import { getUrl } from './url';
 
 export const markFavourite = async (id: string) => {
-	const client = await getClient();
-
-	const res = await client.post(`${getUrl(true)}/FavoriteItems/${id}`, Body.text(''), {
+	const res = await fetch(`${getUrl(true)}/FavoriteItems/${id}`, {
+		method: 'POST',
 		headers: await getHeaders()
 	});
 
@@ -15,9 +14,8 @@ export const markFavourite = async (id: string) => {
 };
 
 export const unmarkFavourite = async (id: string) => {
-	const client = await getClient();
-
-	const res = await client.delete(`${getUrl(true)}/FavoriteItems/${id}`, {
+	const res = await fetch(`${getUrl(true)}/FavoriteItems/${id}`, {
+		method: 'DELETE',
 		headers: await getHeaders()
 	});
 

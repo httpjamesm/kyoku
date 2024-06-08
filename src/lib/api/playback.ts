@@ -1,20 +1,21 @@
 import { getSetting } from '$lib/utils/settings';
 import { secondsToTicks } from '$lib/utils/ticks';
-import { Body, getClient } from '@tauri-apps/api/http';
+import { fetch } from '@tauri-apps/plugin-http';
 import { getHeaders } from './header';
 import { getUrl } from './url';
+import { toQueryString } from '$lib/utils/query';
 
 export const reportPlayback = async (id: string, playing: boolean) => {
 	if (getSetting('account.incognito') === 'true') return;
 
-	const client = await getClient();
-
 	if (playing) {
-		await client.post(`${getUrl(true)}/PlayingItems/${id}`, Body.text(''), {
+		await fetch(`${getUrl(true)}/PlayingItems/${id}`, {
+			method: 'POST',
 			headers: await getHeaders()
 		});
 	} else {
-		await client.delete(`${getUrl(true)}/PlayingItems/${id}`, {
+		await fetch(`${getUrl(true)}/PlayingItems/${id}`, {
+			method: 'DELETE',
 			headers: await getHeaders()
 		});
 	}
@@ -23,9 +24,8 @@ export const reportPlayback = async (id: string, playing: boolean) => {
 export const reportFinishedPlayback = async (id: string) => {
 	if (getSetting('account.incognito') === 'true') return;
 
-	const client = await getClient();
-
-	await client.post(`${getUrl(true)}/PlayedItems/${id}`, Body.text(''), {
+	await fetch(`${getUrl(true)}/PlayedItems/${id}`, {
+		method: 'POST',
 		headers: await getHeaders()
 	});
 };
@@ -35,12 +35,13 @@ export const reportPlaybackProgress = async (seconds: number, id: string) => {
 
 	const ticks = secondsToTicks(seconds);
 
-	const client = await getClient();
-
-	await client.post(`${getUrl(true)}/PlayingItems/${id}/Progress`, Body.text(''), {
-		query: {
+	await fetch(
+		`${getUrl(true)}/PlayingItems/${id}/Progress${toQueryString({
 			positionTicks: ticks.toString()
-		},
-		headers: await getHeaders()
-	});
+		})}`,
+		{
+			method: 'POST',
+			headers: await getHeaders()
+		}
+	);
 };

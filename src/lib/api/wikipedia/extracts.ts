@@ -1,28 +1,26 @@
-import { Body, getClient, ResponseType } from '@tauri-apps/api/http';
+import { toQueryString } from '$lib/utils/query';
+import { fetch } from '@tauri-apps/plugin-http';
 
 export const getArtistWikipedia = async (name: string) => {
-	const client = await getClient();
-
 	const variations = [toSentenceCase(name), name, name.toLowerCase(), name.toUpperCase()];
 	const allVariations =
 		variations.join('|') + '|' + variations.map((variation) => variation + ' (musician)').join('|');
 
-	const res = await client.get('https://en.wikipedia.org/w/api.php', {
-		query: {
+	const res = await fetch(
+		`https://en.wikipedia.org/w/api.php${toQueryString({
 			action: 'query',
 			format: 'json',
 			titles: allVariations,
 			prop: 'extracts',
 			exintro: 'True'
-		},
-		responseType: ResponseType.JSON
-	});
+		})}`
+	);
 
 	if (!res.ok) {
 		throw new Error('Wikipedia rejected the query');
 	}
 
-	const pages = res.data.query.pages;
+	const pages = (await res.json()).query.pages;
 
 	const existingPageIds = Object.keys(pages).filter((id) => id > 0);
 
@@ -42,24 +40,22 @@ export const getArtistWikipedia = async (name: string) => {
 };
 
 export const getWikipedia = async (title: string) => {
-	const client = await getClient();
-
-	const res = await client.get('https://en.wikipedia.org/w/api.php', {
-		query: {
+	const res = await fetch(
+		`https://en.wikipedia.org/w/api.php${toQueryString({
 			action: 'query',
 			format: 'json',
 			titles: title,
 			prop: 'extracts',
 			exintro: 'True'
-		},
-		responseType: ResponseType.JSON
-	});
+		})}`,
+		{}
+	);
 
 	if (!res.ok) {
 		throw new Error('Wikipedia rejected the query');
 	}
 
-	const pages = res.data.query.pages;
+	const pages = (await res.json()).query.pages;
 
 	const existingPageIds = Object.keys(pages).filter((id) => id > 0);
 
