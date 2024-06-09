@@ -56,19 +56,25 @@
 	};
 
 	export const play = async () => {
-		audioElement.play().catch(() => {
-			console.log('play failed - falling back to onloadeddata handler');
-			audioElement.onloadeddata = () => {
-				play().then(() => {
-					console.log('resetting onloadeddata');
-					audioElement.onloadeddata = null;
-				});
-			};
-		});
+		audioElement
+			.play()
+			.then(() => {
+				isPlayingStore.set(true); // update isPlayingStore
+			})
+			.catch(() => {
+				console.log('play failed - falling back to onloadeddata handler');
+				audioElement.onloadeddata = () => {
+					play().then(() => {
+						console.log('resetting onloadeddata');
+						audioElement.onloadeddata = null;
+					});
+				};
+			});
 	};
 
 	export const pause = () => {
 		audioElement.pause();
+		isPlayingStore.set(false); // update isPlayingStore
 	};
 
 	export const isPlaying = () => {
