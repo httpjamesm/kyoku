@@ -29,10 +29,13 @@
 	}
 
 	const attachEventListeners = (element: HTMLAudioElement) => {
+		console.log('Attaching event listeners');
 		element.onplay = () => {
+			console.log('Play event');
 			isPlayingStore.set(true);
 		};
 		element.onpause = () => {
+			console.log('Pause event');
 			isPlayingStore.set(false);
 		};
 		element.onended = handleTrackEnd;
@@ -40,6 +43,7 @@
 	};
 
 	const detachEventListeners = (element: HTMLAudioElement) => {
+		console.log('Detaching event listeners');
 		element.onplay = null;
 		element.onpause = null;
 		element.onended = null;
@@ -173,6 +177,7 @@
 
 	const updateTime = () => {
 		const currentTime = audioElement.currentTime;
+		console.log('Current time:', currentTime); // Debug log
 		if (currentQueueItem) {
 			reportPlaybackProgress(currentTime, currentQueueItem.id);
 		}
@@ -213,6 +218,11 @@
 		detachEventListeners(audioElement);
 		detachEventListeners(nextAudioElement);
 	});
+
+	// Ensure the initial setup attaches event listeners
+	$: if (audioElement) {
+		attachEventListeners(audioElement);
+	}
 </script>
 
 <audio style="display: none;" bind:this={audioElement}>
