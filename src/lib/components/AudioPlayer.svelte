@@ -113,15 +113,17 @@
 		const targetElement = isNext ? nextAudioElement : audioElement;
 		const previousElement = isNext ? audioElement : nextAudioElement;
 
-		if (!targetElement.paused) {
-			targetElement.pause();
+		// Ensure the previous audio element is paused and its event listeners are detached
+		if (!previousElement.paused) {
+			previousElement.pause();
 		}
+		detachEventListeners(previousElement);
 
-		previousElement.pause();
-
+		// Set the new source and preload the track
 		targetElement.src = getStreamURLFromItemId(track.id);
 		targetElement.load(); // Preload the track
 
+		// Attach event listeners only if this is the current track
 		if (!isNext) {
 			attachEventListeners(targetElement);
 		}
