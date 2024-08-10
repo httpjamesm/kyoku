@@ -33,6 +33,7 @@ export const getNewQueue = async (type: Item, id: string) => {
 };
 
 export const getQueueItemFromJellyfinItem = (item: any) => {
+	console.log(item);
 	return {
 		id: item.Id,
 		albumId: item.AlbumId,
@@ -41,7 +42,7 @@ export const getQueueItemFromJellyfinItem = (item: any) => {
 		album: item.Album,
 		year: item.ProductionYear,
 		ticks: item.RunTimeTicks,
-		artistId: item.ArtistItems[0].Id
+		artistId: item.ArtistItems.length > 0 ? item.ArtistItems[0].Id : null
 	};
 };
 
