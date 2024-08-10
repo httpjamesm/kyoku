@@ -29,7 +29,9 @@
 	}
 
 	const attachEventListeners = (element: HTMLAudioElement) => {
-		console.log('Attaching event listeners');
+		console.log(
+			`Attaching event listeners to: ${element === audioElement ? 'audioElement' : 'nextAudioElement'}`
+		);
 		element.onplay = () => {
 			console.log('Play event');
 			isPlayingStore.set(true);
@@ -43,7 +45,9 @@
 	};
 
 	const detachEventListeners = (element: HTMLAudioElement) => {
-		console.log('Detaching event listeners');
+		console.log(
+			`Detaching event listeners from: ${element === audioElement ? 'audioElement' : 'nextAudioElement'}`
+		);
 		element.onplay = null;
 		element.onpause = null;
 		element.onended = null;
@@ -146,11 +150,20 @@
 
 		pause();
 
+		// Detach event listeners from the old audio element
 		detachEventListeners(audioElement);
+
+		// Swap audio elements
 		[audioElement, nextAudioElement] = [nextAudioElement, audioElement];
 		[currentQueueItem, nextQueueItem] = [nextQueueItem, null];
+
+		// Ensure the nextAudioElement (new audioElement) is not playing
+		nextAudioElement.pause();
+
+		// Attach event listeners to the new audio element
 		attachEventListeners(audioElement);
 
+		// Update the queueStore to reflect the change
 		const nextIndex = $queueStore.currentIndex + 1;
 		if (nextIndex < $queueStore.items.length) {
 			currentQueueItem = $queueStore.items[nextIndex];
